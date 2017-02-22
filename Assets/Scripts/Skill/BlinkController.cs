@@ -2,31 +2,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CnControls;
+using UnityEngine.UI;
+
 public class BlinkController : MonoBehaviour
 {
     public GameObject player;
     public GameObject blinkArea;
     public GameObject effectBlink;
 	public int skillRadius = 15;
-    //private float nextFire;
+	public GameObject cooldownSkill;
+	public GameObject cooldownSkillText;
+	public int cooldown = 4;
+	private float cooldownTimer = 0;
     new Projector renderer;
     Vector3 positionBlink = new Vector3(0, 0, 0);
     Animator anim;
-
+	Text txtCooldown;
 
     void Start()
     {
         renderer = GetComponent<Projector>();
         renderer.enabled = false;
         anim = player.GetComponent<Animator>();
+		txtCooldown = cooldownSkillText.GetComponent<Text> ();
     }
+
+	void FixedUpdate() {
+		if (cooldownTimer > 0) {
+			txtCooldown.text = "" + (int)cooldownTimer;
+			cooldownTimer -= Time.deltaTime;
+		}
+	}
 
     void Update()
     {
 		float horizontal = CnInputManager.GetAxis("BlinkHorizontal");
         float vertical = CnInputManager.GetAxis("BlinkVertical");
 
+
+		if (cooldownTimer < 1)
+		{
+			cooldownSkill.SetActive(false);
+			cooldownTimer = 1;
+		}
+
         Move(horizontal, vertical);
+
     }
 
 
@@ -42,6 +63,8 @@ public class BlinkController : MonoBehaviour
         }
 		if (CnInputManager.GetButtonUp("BlinkButton"))
 		{
+			cooldownSkill.SetActive(true);
+			cooldownTimer = cooldown;
             StartCoroutine(Blink());
 		}
     }

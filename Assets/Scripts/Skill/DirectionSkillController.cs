@@ -14,7 +14,8 @@ public class DirectionSkillController : MonoBehaviour
     public GameObject skillLine;
     public GameObject cooldownSkill;
     public GameObject cooldownSkillText;
-    public float cooldownTimer = 2;
+	private float cooldownTimer = 2;
+	public int cooldown = 4;
 
     private float nextFire;
     new Rigidbody rigidbody;
@@ -35,16 +36,18 @@ public class DirectionSkillController : MonoBehaviour
 		if (horizontal != 0 || vertical != 0) {
 			rigidbody.transform.rotation = Util.Turning (horizontal, vertical);
 		}
+
+		if (cooldownTimer > 1)
+		{
+			txtCooldown = cooldownSkillText.GetComponent<Text>();
+			txtCooldown.text = "" + (int)cooldownTimer;
+			cooldownTimer -= Time.deltaTime;
+		}
 	}
 
 	void Update() {
 
-        if (cooldownTimer > 1)
-        {
-            txtCooldown = cooldownSkillText.GetComponent<Text>();
-            txtCooldown.text = "" + (int)cooldownTimer;
-            cooldownTimer -= Time.deltaTime;
-        }
+
         if (cooldownTimer < 1)
         {
             cooldownSkill.SetActive(false);
@@ -61,7 +64,7 @@ public class DirectionSkillController : MonoBehaviour
 		if (CnInputManager.GetButtonUp(skillName + "Button") && cooldownTimer == 1)
 		{
             cooldownSkill.SetActive(true);
-            cooldownTimer = 4;
+			cooldownTimer = cooldown;
             skillLine.SetActive(false);
             anim.SetBool(skillName, true);
 			player.transform.rotation = rigidbody.transform.rotation;
