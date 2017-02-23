@@ -66,7 +66,7 @@ public class DirectionSkillController : MonoBehaviour
             cooldownSkill.SetActive(true);
 			cooldownTimer = cooldown;
             skillLine.SetActive(false);
-            anim.SetBool(skillName, true);
+            anim.SetBool("Attack", true);
 			player.transform.rotation = rigidbody.transform.rotation;
 			StartCoroutine(Attack());
 		}
@@ -75,7 +75,7 @@ public class DirectionSkillController : MonoBehaviour
 	IEnumerator Attack()
 	{
 		yield return new WaitForSeconds(0.5f);
-        anim.SetBool(skillName, false);
+        anim.SetBool("Attack", false);
 		Instantiate(skill, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
 	}
 }
