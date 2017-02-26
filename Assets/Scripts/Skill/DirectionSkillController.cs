@@ -12,10 +12,9 @@ public class DirectionSkillController : MonoBehaviour
     public GameObject skill;
 	public GameObject skillSpwanPosition;
     public GameObject skillLine;
-    public GameObject cooldownSkill;
-    public GameObject cooldownSkillText;
-	private float cooldownTimer = 2;
-	public int cooldown = 4;
+	public GameObject coolDownPrefab;
+
+    private GameObject cooldownSkill;
 
     private float nextFire;
     new Rigidbody rigidbody;
@@ -25,6 +24,8 @@ public class DirectionSkillController : MonoBehaviour
 
     void Start()
     {
+		GameObject canvas = GameObject.FindGameObjectWithTag ("Canvas");
+		cooldownSkill = Instantiate (coolDownPrefab, canvas.transform, false);
         rigidbody = GetComponent<Rigidbody>();
         anim = player.GetComponent<Animator>();
     }
@@ -36,24 +37,11 @@ public class DirectionSkillController : MonoBehaviour
 		if (horizontal != 0 || vertical != 0) {
 			rigidbody.transform.rotation = Util.Turning (horizontal, vertical);
 		}
-
-		if (cooldownTimer > 1)
-		{
-			txtCooldown = cooldownSkillText.GetComponent<Text>();
-			txtCooldown.text = "" + (int)cooldownTimer;
-			cooldownTimer -= Time.deltaTime;
-		}
+			
 	}
 
 	void Update() {
-
-
-        if (cooldownTimer < 1)
-        {
-            cooldownSkill.SetActive(false);
-            cooldownTimer = 1;
-        }
-
+		
         if (CnInputManager.GetButton(skillName + "Button"))
 		{
             skillLine.SetActive(true);
@@ -61,13 +49,12 @@ public class DirectionSkillController : MonoBehaviour
 
         }
 
-		if (CnInputManager.GetButtonUp(skillName + "Button") && cooldownTimer == 1)
+		if (CnInputManager.GetButtonUp(skillName + "Button") && !cooldownSkill.activeSelf)
 		{
-            cooldownSkill.SetActive(true);
-			cooldownTimer = cooldown;
             skillLine.SetActive(false);
             anim.SetBool("Attack", true);
 			player.transform.rotation = rigidbody.transform.rotation;
+			cooldownSkill.SetActive (true);
 			StartCoroutine(Attack());
 		}
 	}
