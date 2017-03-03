@@ -14,7 +14,7 @@ public class CoolDownSkill : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (cooldownTimer == 1 && gameObject.activeSelf) {
+		if (cooldownTimer == 1) {
 			cooldownTimer = coolDownTime+1;
 		}
 
