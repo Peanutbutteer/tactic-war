@@ -10,28 +10,22 @@ public class BlinkController : MonoBehaviour
     public GameObject blinkArea;
     public GameObject effectBlink;
 	public int skillRadius = 15;
-	public GameObject cooldownSkill;
-	public GameObject cooldownSkillText;
-	public int cooldown = 4;
-	private float cooldownTimer = 0;
+	public GameObject cooldownPrefab;
     new Projector renderer;
     Vector3 positionBlink = new Vector3(0, 0, 0);
     Animator anim;
-	Text txtCooldown;
-
+	private GameObject cooldownSkill;
     void Start()
     {
+		GameObject canvas = GameObject.FindGameObjectWithTag ("Canvas");
+		cooldownSkill = Instantiate (cooldownPrefab, canvas.transform, false);
         renderer = GetComponent<Projector>();
         renderer.enabled = false;
         anim = player.GetComponent<Animator>();
-		txtCooldown = cooldownSkillText.GetComponent<Text> ();
     }
 
 	void FixedUpdate() {
-		if (cooldownTimer > 0) {
-			txtCooldown.text = "" + (int)cooldownTimer;
-			cooldownTimer -= Time.deltaTime;
-		}
+
 	}
 
     void Update()
@@ -39,12 +33,6 @@ public class BlinkController : MonoBehaviour
 		float horizontal = CnInputManager.GetAxis("BlinkHorizontal");
         float vertical = CnInputManager.GetAxis("BlinkVertical");
 
-
-		if (cooldownTimer < 1)
-		{
-			cooldownSkill.SetActive(false);
-			cooldownTimer = 1;
-		}
 
         Move(horizontal, vertical);
 
@@ -64,7 +52,6 @@ public class BlinkController : MonoBehaviour
 		if (CnInputManager.GetButtonUp("BlinkButton"))
 		{
 			cooldownSkill.SetActive(true);
-			cooldownTimer = cooldown;
             StartCoroutine(Blink());
 		}
     }
