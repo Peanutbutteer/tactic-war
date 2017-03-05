@@ -64,7 +64,7 @@ namespace Prototype.NetworkLobby
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
-
+            lobbyPanel.gameObject.SetActive(false);
         }
 
         public void ChangeTo(RectTransform newPanel)
