@@ -62,7 +62,6 @@ namespace Prototype.NetworkLobby
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
-            // hide lobby
             lobbyPanel.gameObject.SetActive(false);
             // if (SceneManager.GetSceneAt(0).name == lobbyScene)
             // {
@@ -185,6 +184,7 @@ namespace Prototype.NetworkLobby
             ChangeTo(newMainMenuPanel);
         }
 
+
         class KickMsg : MessageBase { }
         public void KickPlayer(NetworkConnection conn)
         {
@@ -227,12 +227,6 @@ namespace Prototype.NetworkLobby
         public void OnPlayersNumberModified(int count)
         {
             _playerNumber += count;
-
-            // int localPlayerCount = 0;
-            // foreach (PlayerController p in ClientScene.localPlayers)
-            //     localPlayerCount += (p == null || p.playerControllerId == -1) ? 0 : 1;
-
-            // // addPlayerButton.SetActive(localPlayerCount < maxPlayersPerConnection && _playerNumber < maxPlayers);
         }
 
         // ----------------- Server callbacks ------------------
