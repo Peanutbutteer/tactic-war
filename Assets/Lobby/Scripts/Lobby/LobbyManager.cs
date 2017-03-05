@@ -53,7 +53,6 @@ namespace Prototype.NetworkLobby
             _lobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
             currentPanel = newMainMenuPanel;
 
-            // backButton.gameObject.SetActive(false);
             GetComponent<Canvas>().enabled = true;
 
             DontDestroyOnLoad(gameObject);
@@ -63,52 +62,6 @@ namespace Prototype.NetworkLobby
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
             lobbyPanel.gameObject.SetActive(false);
-            // if (SceneManager.GetSceneAt(0).name == lobbyScene)
-            // {
-                // if (topPanel.isInGame)
-                // {
-                //     ChangeTo(lobbyPanel);
-                //     if (_isMatchmaking)
-                //     {
-                //         if (conn.playerControllers[0].unetView.isServer)
-                //         {
-                //             backDelegate = StopHostClbk;
-                //         }
-                //         else
-                //         {
-                //             backDelegate = StopClientClbk;
-                //         }
-                //     }
-                //     else
-                //     {
-                //         if (conn.playerControllers[0].unetView.isClient)
-                //         {
-                //             backDelegate = StopHostClbk;
-                //         }
-                //         else
-                //         {
-                //             backDelegate = StopClientClbk;
-                //         }
-                //     }
-                // }
-                // else
-                // {
-                //     ChangeTo(newMainMenuPanel);
-                // }
-
-                // topPanel.ToggleVisibility(true);
-                // topPanel.isInGame = false;
-            // }
-            // else
-            // {
-                // ChangeTo(null);
-
-                // Destroy(GameObject.Find("MainMenuUI(Clone)"));
-
-                //backDelegate = StopGameClbk;
-                // topPanel.isInGame = true;
-                // topPanel.ToggleVisibility(false);
-            // }
         }
 
         public void ChangeTo(RectTransform newPanel)
@@ -138,6 +91,7 @@ namespace Prototype.NetworkLobby
         }
 
         public delegate void BackButtonDelegate();
+        
         public BackButtonDelegate backDelegate;
         public void GoBackButton()
         {

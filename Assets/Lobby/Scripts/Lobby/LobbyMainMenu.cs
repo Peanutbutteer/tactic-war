@@ -9,22 +9,17 @@ namespace Prototype.NetworkLobby
     {
         public LobbyManager lobbyManager;
 
-        public RectTransform lobbyServerList;
-        public RectTransform lobbyPanel;
-
         public InputField matchNameInput;
 
         public void OnEnable()
         {
-            // lobbyManager.topPanel.ToggleVisibility(true);
-
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
-
         }
 
         public void OnClickCreateMatchmakingGame()
         {
+
             lobbyManager.StartMatchMaker();
             lobbyManager.matchMaker.CreateMatch(
                 matchNameInput.text,
@@ -36,7 +31,6 @@ namespace Prototype.NetworkLobby
             lobbyManager.backDelegate = lobbyManager.StopHost;
             lobbyManager._isMatchmaking = true;
             lobbyManager.DisplayIsConnecting();
-
         }
 
         void onEndEditGameName(string text)
