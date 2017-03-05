@@ -23,6 +23,10 @@ namespace Prototype.NetworkLobby
 
         void OnEnable()
         {
+            onRefreshButton();
+        }
+
+        public void onRefreshButton() {
             currentPage = 0;
             previousPage = 0;
 

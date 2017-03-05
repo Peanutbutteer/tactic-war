@@ -9,12 +9,19 @@ namespace Prototype.NetworkLobby
 
     	public LobbyManager lobbyManager;
 		public RectTransform lobbyServerList;
+		public RectTransform createRoomPanel;
 
 		public void OnClickOpenServerList()
-   		 {
+   		{
 			lobbyManager.StartMatchMaker();
 			lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
-      	  lobbyManager.ChangeTo(lobbyServerList);
+      	  	lobbyManager.ChangeTo(lobbyServerList);
+		}
+
+		public void OnClickCreateRoom()
+		{
+			lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
+			lobbyManager.ChangeTo(createRoomPanel);
 		}
 	}
 
