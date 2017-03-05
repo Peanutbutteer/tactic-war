@@ -16,7 +16,7 @@ namespace Prototype.NetworkLobby
 
         public void OnEnable()
         {
-            lobbyManager.topPanel.ToggleVisibility(true);
+            // lobbyManager.topPanel.ToggleVisibility(true);
 
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
@@ -37,7 +37,6 @@ namespace Prototype.NetworkLobby
             lobbyManager._isMatchmaking = true;
             lobbyManager.DisplayIsConnecting();
 
-            lobbyManager.SetServerInfo("Matchmaker Host", lobbyManager.matchHost);
         }
 
         void onEndEditGameName(string text)
