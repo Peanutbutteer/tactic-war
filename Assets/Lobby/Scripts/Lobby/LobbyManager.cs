@@ -22,21 +22,18 @@ namespace Prototype.NetworkLobby
 
         [Space]
         [Header("UI Reference")]
-        public LobbyTopPanel topPanel;
 
         public RectTransform mainMenuPanel;
         public RectTransform lobbyPanel;
 
+        public RectTransform createRoomPanel;
+
         public LobbyInfoPanel infoPanel;
         public LobbyCountdownPanel countdownPanel;
-        public GameObject addPlayerButton;
+        // public GameObject addPlayerButton;
 
         protected RectTransform currentPanel;
-
-        public Button backButton;
-
-        public Text statusInfo;
-        public Text hostInfo;
+        
 
         //Client numPlayers from NetworkManager is always 0, so we count (throught connect/destroy in LobbyPlayer) the number
         //of players, so that even client know how many player there is.
@@ -59,62 +56,15 @@ namespace Prototype.NetworkLobby
             _lobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
             currentPanel = mainMenuPanel;
 
-            backButton.gameObject.SetActive(false);
             GetComponent<Canvas>().enabled = true;
 
             DontDestroyOnLoad(gameObject);
 
-            SetServerInfo("Offline", "None");
         }
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
-            if (SceneManager.GetSceneAt(0).name == lobbyScene)
-            {
-                if (topPanel.isInGame)
-                {
-                    ChangeTo(lobbyPanel);
-                    if (_isMatchmaking)
-                    {
-                        if (conn.playerControllers[0].unetView.isServer)
-                        {
-                            backDelegate = StopHostClbk;
-                        }
-                        else
-                        {
-                            backDelegate = StopClientClbk;
-                        }
-                    }
-                    else
-                    {
-                        if (conn.playerControllers[0].unetView.isClient)
-                        {
-                            backDelegate = StopHostClbk;
-                        }
-                        else
-                        {
-                            backDelegate = StopClientClbk;
-                        }
-                    }
-                }
-                else
-                {
-                    ChangeTo(mainMenuPanel);
-                }
-
-                topPanel.ToggleVisibility(true);
-                topPanel.isInGame = false;
-            }
-            else
-            {
-                ChangeTo(null);
-
-                Destroy(GameObject.Find("MainMenuUI(Clone)"));
-
-                //backDelegate = StopGameClbk;
-                topPanel.isInGame = true;
-                topPanel.ToggleVisibility(false);
-            }
+            lobbyPanel.gameObject.SetActive(false);
         }
 
         public void ChangeTo(RectTransform newPanel)
@@ -133,12 +83,10 @@ namespace Prototype.NetworkLobby
 
             if (currentPanel != mainMenuPanel)
             {
-                backButton.gameObject.SetActive(true);
+
             }
             else
             {
-                backButton.gameObject.SetActive(false);
-                SetServerInfo("Offline", "None");
                 _isMatchmaking = false;
             }
         }
@@ -149,19 +97,12 @@ namespace Prototype.NetworkLobby
             infoPanel.Display("Connecting...", "Cancel", () => { _this.backDelegate(); });
         }
 
-        public void SetServerInfo(string status, string host)
-        {
-            statusInfo.text = status;
-            hostInfo.text = host;
-        }
-
 
         public delegate void BackButtonDelegate();
         public BackButtonDelegate backDelegate;
         public void GoBackButton()
         {
             backDelegate();
-			topPanel.isInGame = false;
         }
 
         // ----------------- Server management
@@ -238,8 +179,7 @@ namespace Prototype.NetworkLobby
 
             ChangeTo(lobbyPanel);
             backDelegate = StopHostClbk;
-            SetServerInfo("Hosting", networkAddress);
-        }
+           }
 
 		public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
 		{
@@ -262,12 +202,7 @@ namespace Prototype.NetworkLobby
         {
             _playerNumber += count;
 
-            int localPlayerCount = 0;
-            foreach (PlayerController p in ClientScene.localPlayers)
-                localPlayerCount += (p == null || p.playerControllerId == -1) ? 0 : 1;
-
-            addPlayerButton.SetActive(localPlayerCount < maxPlayersPerConnection && _playerNumber < maxPlayers);
-        }
+         }
 
         // ----------------- Server callbacks ------------------
 
@@ -401,7 +336,6 @@ namespace Prototype.NetworkLobby
             {//only to do on pure client (not self hosting client)
                 ChangeTo(lobbyPanel);
                 backDelegate = StopClientClbk;
-                SetServerInfo("Client", networkAddress);
             }
         }
 
