@@ -39,7 +39,6 @@ namespace Prototype.NetworkLobby
 
             player.transform.SetParent(playerListContentTransform, false);
 
-
             PlayerListModified();
         }
 

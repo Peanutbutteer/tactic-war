@@ -26,8 +26,6 @@ namespace Prototype.NetworkLobby
             currentPage = 0;
             previousPage = 0;
 
-			lobbyManager.StartMatchMaker();
-
             foreach (Transform t in serverListRect)
                 Destroy(t.gameObject);
 
@@ -35,10 +33,6 @@ namespace Prototype.NetworkLobby
 
             RequestPage(0);
         }
-
-		public void OnRefresh() {
-			this.OnEnable ();
-		}
 
 		public void OnGUIMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
 		{

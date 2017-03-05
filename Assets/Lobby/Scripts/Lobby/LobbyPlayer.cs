@@ -49,7 +49,7 @@ namespace Prototype.NetworkLobby
             if (LobbyManager.s_Singleton != null) LobbyManager.s_Singleton.OnPlayersNumberModified(1);
 
             LobbyPlayerList._instance.AddPlayer(this);
-            
+           
             if (isLocalPlayer)
             {
                 SetupLocalPlayer();
