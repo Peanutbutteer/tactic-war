@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using CnControls;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class BlinkController : MonoBehaviour
+public class BlinkController : NetworkBehaviour
 {
-    public GameObject player;
+    public GameObject controller;
     public GameObject blinkArea;
     public GameObject effectBlink;
 	public int skillRadius = 15;
@@ -19,9 +20,9 @@ public class BlinkController : MonoBehaviour
     {
 		GameObject canvas = GameObject.FindGameObjectWithTag ("Canvas");
 		cooldownSkill = Instantiate (cooldownPrefab, canvas.transform, false);
-        renderer = GetComponent<Projector>();
+        renderer = controller.GetComponent<Projector>();
         renderer.enabled = false;
-        anim = player.GetComponent<Animator>();
+        anim = GetComponent<Animator>();
     }
 
 	void FixedUpdate() {
@@ -42,12 +43,17 @@ public class BlinkController : MonoBehaviour
 
     void Move(float x, float y)
     {
-		if(CnInputManager.GetButton("BlinkButton"))
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
+        if (CnInputManager.GetButton("BlinkButton"))
         {
             blinkArea.SetActive(true);
             renderer.enabled = true;
 			positionBlink = new Vector3(x * skillRadius, 1000f*0.03f, y * skillRadius);
-            transform.position = player.transform.position + positionBlink;
+            controller.transform.position = transform.position + positionBlink;
         }
 		if (CnInputManager.GetButtonUp("BlinkButton"))
 		{
@@ -62,12 +68,20 @@ public class BlinkController : MonoBehaviour
         anim.SetBool("Blink",true);
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("Blink", false);
-        Vector3 positionEffectBlink = new Vector3(player.transform.position.x, player.transform.position.y+3, player.transform.position.z);
-        Instantiate(effectBlink, positionEffectBlink, player.transform.rotation);
+        CmdSpawnEffectBlink();
         blinkArea.SetActive(false);
-        Vector3 position = transform.position;
+        Vector3 position = controller.transform.position;
         position.y = 0;
-        player.transform.position = position;
+        transform.position = position;
         positionBlink = new Vector3(0, 0, 0);
+
+    }
+    [Command]
+    void CmdSpawnEffectBlink()
+    {
+        Vector3 positionEffectBlink = new Vector3(transform.position.x, transform.position.y + 3, transform.position.z);
+        var attackSkill = (GameObject)Instantiate(effectBlink, positionEffectBlink, transform.rotation);
+        NetworkServer.Spawn(attackSkill);
+        
     }
 }

@@ -12,10 +12,11 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void Update() {
+
 		if(player!=null) {
 			return;
 		}
-				GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+		GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 		foreach (var item in players)
 		{
 			if(item.GetComponent<NetworkIdentity> ().hasAuthority) {

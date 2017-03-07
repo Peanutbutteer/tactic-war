@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CnControls;
-public class PlayerMovementController : MonoBehaviour {
+using UnityEngine.Networking;
+
+public class PlayerMageController : NetworkBehaviour
+{
 
 	public float speed = 15f;
     
@@ -18,7 +21,12 @@ public class PlayerMovementController : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 
-		float horizontal = CnInputManager.GetAxis ("Horizontal");
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
+        float horizontal = CnInputManager.GetAxis ("Horizontal");
 		float vertical = CnInputManager.GetAxis ("Vertical");
 
         if (anim.GetBool("Attack") == false && anim.GetBool("Blink") == false)
@@ -30,6 +38,8 @@ public class PlayerMovementController : MonoBehaviour {
             Move(horizontal, vertical);
             Animating(horizontal, vertical);
         }
+
+
     }
 
     void Move(float x,float y) {
@@ -40,6 +50,7 @@ public class PlayerMovementController : MonoBehaviour {
 
 	}
 
+
     void Animating(float h, float v)
     {
         // Create a boolean that is true if either of the input axes is non-zero.
@@ -48,4 +59,22 @@ public class PlayerMovementController : MonoBehaviour {
         // Tell the animator whether or not the player is walking.
         anim.SetBool("Walk Forward", walking);
     }
+   
+    void OnParticleCollision(GameObject other)
+    {
+       if(other.gameObject.tag == "Attack")
+        {
+            RpcRespawn();
+        }
+    }
+
+    [ClientRpc]
+    void RpcRespawn()
+    {
+        if (isLocalPlayer)
+        {
+            transform.position = new Vector3(70,0,60);
+        }
+    }
+
 }
