@@ -64,6 +64,7 @@ namespace Prototype.NetworkLobby
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
+            Debug.Log("OnLobbyClientSceneChanged");
             lobbyPanel.gameObject.SetActive(false);
         }
 
@@ -179,7 +180,7 @@ namespace Prototype.NetworkLobby
 
             ChangeTo(lobbyPanel);
             backDelegate = StopHostClbk;
-           }
+        }
 
 		public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
 		{
@@ -342,14 +343,25 @@ namespace Prototype.NetworkLobby
 
         public override void OnClientDisconnect(NetworkConnection conn)
         {
+            // Call on client when client is disconnect
             base.OnClientDisconnect(conn);
+            infoPanel.Display("Your have been Disconnect from Server", "Close", null);
             ChangeTo(mainMenuPanel);
         }
 
+        public override void OnLobbyClientDisconnect(NetworkConnection conn) {
+            base.OnLobbyClientDisconnect(conn);
+        }
+        
         public override void OnClientError(NetworkConnection conn, int errorCode)
         {
             ChangeTo(mainMenuPanel);
             infoPanel.Display("Cient error : " + (errorCode == 6 ? "timeout" : errorCode.ToString()), "Close", null);
+        }
+
+        public void DisconnectAndReturnToMenu() {
+            StopClientClbk();
+            ChangeTo(mainMenuPanel);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.Networking;
 public class CameraController : MonoBehaviour {
 
-	private Vector3 offset;
+	private Vector3 offset = new Vector3(1.5f, 40f, -20f);
 	private GameObject player;
 	// Use this for initialization
 	void Start () {
@@ -21,7 +21,6 @@ public class CameraController : MonoBehaviour {
 		{
 			if(item.GetComponent<NetworkIdentity> ().hasAuthority) {
 				player = item;
-				offset = transform.position - player.transform.position;
 			}
 		}
 	}

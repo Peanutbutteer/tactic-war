@@ -15,4 +15,4 @@ public static class Util
         float deg = rad * (180 / Mathf.PI);
         return Quaternion.Euler(new Vector3(90, 0, 90-deg));
         }
-    }
+}
