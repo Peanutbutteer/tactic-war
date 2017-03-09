@@ -60,21 +60,6 @@ public class PlayerMageController : NetworkBehaviour
         anim.SetBool("Walk Forward", walking);
     }
    
-    void OnParticleCollision(GameObject other)
-    {
-       if(other.gameObject.tag == "Attack")
-        {
-            RpcRespawn();
-        }
-    }
 
-    [ClientRpc]
-    void RpcRespawn()
-    {
-        if (isLocalPlayer)
-        {
-            transform.position = new Vector3(70,0,60);
-        }
-    }
 
 }

@@ -360,7 +360,7 @@ namespace Prototype.NetworkLobby
         }
 
         public void DisconnectAndReturnToMenu() {
-            StopClientClbk();
+            backDelegate();
             ChangeTo(mainMenuPanel);
         }
     }
