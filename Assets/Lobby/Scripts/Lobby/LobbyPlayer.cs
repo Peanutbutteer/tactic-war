@@ -11,7 +11,7 @@ namespace Prototype.NetworkLobby
     //Any LobbyHook can then grab it and pass those value to the game player prefab (see the Pong Example in the Samples Scenes)
     public class LobbyPlayer : NetworkLobbyPlayer
     {
-        static Color[] Colors = new Color[] { Color.magenta, Color.red, Color.cyan, Color.blue, Color.green, Color.yellow };
+        static Color[] Colors = new Color[] { Color.blue, Color.red, Color.yellow, Color.magenta, Color.white, Color.black, Color.green };
         //used on server to avoid assigning the same color to two player
         static List<int> _colorInUse = new List<int>();
 
@@ -33,7 +33,7 @@ namespace Prototype.NetworkLobby
         public Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         public Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
 
-        static Color JoinColor = new Color(255.0f/255.0f, 0.0f, 101.0f/255.0f,1.0f);
+        static Color JoinColor = new Color(255.0f / 255.0f, 0.0f, 101.0f / 255.0f, 1.0f);
         static Color NotReadyColor = new Color(34.0f / 255.0f, 44 / 255.0f, 55.0f / 255.0f, 1.0f);
         static Color ReadyColor = new Color(0.0f, 204.0f / 255.0f, 204.0f / 255.0f, 1.0f);
         static Color TransparentColor = new Color(0, 0, 0, 0);
@@ -41,15 +41,46 @@ namespace Prototype.NetworkLobby
         //static Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         //static Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
 
+        [SyncVar]
+        private int m_PlayerId;
+
+        [Server]
+        public void SetPlayerId(int playerId)
+        {
+            this.m_PlayerId = playerId;
+        }
+
+        public int playerId
+        {
+            get { return m_PlayerId; }
+        }
+
+        [SyncVar]
+        protected int m_Score = 0;
+
+        public int score
+        {
+            get { return m_Score; }
+        }
+
+        public void IncrementScore()
+        {
+            m_Score++;
+        }
+
+        public void DecrementScore()
+        {
+            m_Score--;
+        }
+
 
         public override void OnClientEnterLobby()
         {
             base.OnClientEnterLobby();
 
             if (LobbyManager.s_Singleton != null) LobbyManager.s_Singleton.OnPlayersNumberModified(1);
-
             LobbyPlayerList._instance.AddPlayer(this);
-           
+
             if (isLocalPlayer)
             {
                 SetupLocalPlayer();
@@ -63,6 +94,7 @@ namespace Prototype.NetworkLobby
             //will be created with the right value currently on server
             OnMyName(playerName);
             OnMyColor(playerColor);
+
         }
 
         public override void OnStartAuthority()
@@ -72,7 +104,7 @@ namespace Prototype.NetworkLobby
             //if we return from a game, color of text can still be the one for "Ready"
             readyButton.transform.GetChild(0).GetComponent<Text>().color = Color.white;
 
-           SetupLocalPlayer();
+            SetupLocalPlayer();
         }
 
         void ChangeReadyButtonColor(Color c)
@@ -116,7 +148,7 @@ namespace Prototype.NetworkLobby
 
             //have to use child count of player prefab already setup as "this.slot" is not set yet
             if (playerName == "")
-                CmdNameChanged("Player" + (LobbyPlayerList._instance.playerListContentTransform.childCount-1));
+                CmdNameChanged("Player" + (LobbyPlayerList._instance.playerListContentTransform.childCount - 1));
 
             //we switch from simple name display to name input
             colorButton.interactable = true;
@@ -176,7 +208,7 @@ namespace Prototype.NetworkLobby
         }
 
         public void OnPlayerListChanged(int idx)
-        { 
+        {
             GetComponent<Image>().color = (idx % 2 == 0) ? EvenRowColor : OddRowColor;
         }
 
@@ -221,7 +253,7 @@ namespace Prototype.NetworkLobby
             }
             else if (isServer)
                 LobbyManager.s_Singleton.KickPlayer(connectionToClient);
-                
+
         }
 
         public void ToggleJoinButton(bool enabled)
@@ -310,5 +342,7 @@ namespace Prototype.NetworkLobby
                 }
             }
         }
+
+
     }
 }

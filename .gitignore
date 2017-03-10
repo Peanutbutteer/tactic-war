@@ -33,3 +33,5 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+test multi_Data/
+test multi.exe

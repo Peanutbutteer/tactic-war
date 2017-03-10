@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using Prototype.NetworkLobby;
 
 public class PlayerHealth : NetworkBehaviour
 {
@@ -12,20 +13,44 @@ public class PlayerHealth : NetworkBehaviour
 
     public RectTransform healthBar;
 
+    ScoreHUD scoreHud;
+    
+
+    [Server]
     public void TakeDamage(int amount)
     {
         if (!isServer)
             return;
-
-        Debug.Log("1");
-        currentHealth -= amount;
+        
+        currentHealth -= 100;
         if (currentHealth <= 0)
         {
             currentHealth = maxHealth;
 
             // called on the Server, but invoked on the Clients
-            RpcRespawn();
+            //
+            int id = gameObject.GetComponent<PlayerMageController>().playerId;
+            LobbyPlayer player = LobbyManager.s_Singleton.lobbySlots[id] as LobbyPlayer;
+            player.IncrementScore();
+            Debug.Log("ID: "+id);
+            Debug.Log("Score: " + player);
+            int[] score = new int[LobbyManager.s_Singleton.lobbySlots.Length];
+            for (int i = 0; i < score.Length; ++i)
+            {
+                LobbyPlayer localPlayer = LobbyManager.s_Singleton.lobbySlots[id] as LobbyPlayer;
+                Debug.Log(localPlayer.playerName + " " + localPlayer.score);
+                score[i] = localPlayer.score;
+            }
+
+            RpcUpdateHudScore(score);
         }
+    }
+
+    [ClientRpc]
+    void RpcUpdateHudScore(int[] score)
+    {
+        scoreHud = GameObject.FindGameObjectWithTag("Score").GetComponent<ScoreHUD>();
+        scoreHud.UpdateScore(score);
     }
 
     void OnChangeHealth(int health)

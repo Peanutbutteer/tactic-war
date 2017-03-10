@@ -64,7 +64,6 @@ namespace Prototype.NetworkLobby
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
-            Debug.Log("OnLobbyClientSceneChanged");
             lobbyPanel.gameObject.SetActive(false);
         }
 
@@ -216,7 +215,6 @@ namespace Prototype.NetworkLobby
             LobbyPlayer newPlayer = obj.GetComponent<LobbyPlayer>();
             newPlayer.ToggleJoinButton(numPlayers + 1 >= minPlayers);
 
-
             for (int i = 0; i < lobbySlots.Length; ++i)
             {
                 LobbyPlayer p = lobbySlots[i] as LobbyPlayer;
@@ -363,5 +361,6 @@ namespace Prototype.NetworkLobby
             backDelegate();
             ChangeTo(mainMenuPanel);
         }
+
     }
 }

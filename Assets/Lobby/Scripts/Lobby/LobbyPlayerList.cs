@@ -54,6 +54,7 @@ namespace Prototype.NetworkLobby
             foreach (LobbyPlayer p in _players)
             {
                 p.OnPlayerListChanged(i);
+                p.SetPlayerId(i);
                 ++i;
             }
         }
