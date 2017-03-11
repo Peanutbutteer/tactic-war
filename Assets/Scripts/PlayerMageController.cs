@@ -13,6 +13,7 @@ public class PlayerMageController : NetworkBehaviour
     Animator anim;
     public GameObject mageBody;
     public GameObject staff;
+    [SyncVar]
     public Color color;
 
     [SyncVar]
@@ -82,7 +83,7 @@ public class PlayerMageController : NetworkBehaviour
         anim.SetBool("Walk Forward", walking);
     }
 
-    public override void OnStartLocalPlayer()
+    public override void OnStartClient()
     {
         int meshMage = 0;
         string texture = "";

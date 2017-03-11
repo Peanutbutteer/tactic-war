@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Fireball : MonoBehaviour {
+using UnityEngine.Networking;
+public class Fireball : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -17,6 +17,8 @@ public class Fireball : MonoBehaviour {
 
     void OnParticleCollision(GameObject other)
     {
+        if (!isServer)
+           return;
         var hit = other.gameObject;
         var playerHealth = hit.GetComponent<PlayerHealth>();
         if (playerHealth != null)

@@ -44,7 +44,6 @@ namespace Prototype.NetworkLobby
         [SyncVar]
         private int m_PlayerId;
 
-        [Server]
         public void SetPlayerId(int playerId)
         {
             this.m_PlayerId = playerId;

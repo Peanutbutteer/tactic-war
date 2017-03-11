@@ -15,33 +15,24 @@ public class PlayerHealth : NetworkBehaviour
 
     ScoreHUD scoreHud;
     
-
-    [Server]
     public void TakeDamage(int amount)
     {
         if (!isServer)
             return;
         
-        currentHealth -= 100;
+        currentHealth -= amount;
         if (currentHealth <= 0)
         {
             currentHealth = maxHealth;
-
-            // called on the Server, but invoked on the Clients
-            //
             int id = gameObject.GetComponent<PlayerMageController>().playerId;
-            LobbyPlayer player = LobbyManager.s_Singleton.lobbySlots[id] as LobbyPlayer;
+            LobbyPlayer player = LobbyPlayerList._instance._players[id];
             player.IncrementScore();
-            Debug.Log("ID: "+id);
-            Debug.Log("Score: " + player);
-            int[] score = new int[LobbyManager.s_Singleton.lobbySlots.Length];
+            int[] score = new int[LobbyPlayerList._instance._players.Count];
             for (int i = 0; i < score.Length; ++i)
             {
-                LobbyPlayer localPlayer = LobbyManager.s_Singleton.lobbySlots[id] as LobbyPlayer;
-                Debug.Log(localPlayer.playerName + " " + localPlayer.score);
+                LobbyPlayer localPlayer = LobbyPlayerList._instance._players[i] as LobbyPlayer;
                 score[i] = localPlayer.score;
             }
-
             RpcUpdateHudScore(score);
         }
     }
