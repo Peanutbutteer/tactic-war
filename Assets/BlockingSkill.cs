@@ -23,4 +23,9 @@ public class BlockingSkill : MonoBehaviour {
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(other.gameObject.tag+ "1+");
+    }
+
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Networking;
 public class HomingSkill : MonoBehaviour
 {
     public float missileVelocity = 0.1f;
@@ -22,14 +22,24 @@ public class HomingSkill : MonoBehaviour
 
     void Update()
     {
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (var item in players)
+        {
+            if (!item.GetComponent<NetworkIdentity>().hasAuthority)
+            {
+                if (Vector3.Distance(transform.position, item.transform.position) < 20)
+                {
+                    target = item;
+                    var targetRotation = Quaternion.LookRotation(target.transform.position - transform.position);
+
+                    homingMissile.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, 2.5f));
+                }
+            }
+        }
+
         homingMissile.velocity = transform.forward * missileVelocity;
 
-        if (Vector3.Distance(transform.position, target.transform.position) < 20)
-        {
-            var targetRotation = Quaternion.LookRotation(target.transform.position - transform.position);
-
-            homingMissile.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, 2.5f));
-        }
     }
     void OnParticleCollision(GameObject other)
     {

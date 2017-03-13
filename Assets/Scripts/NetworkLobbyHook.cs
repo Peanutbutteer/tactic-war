@@ -13,6 +13,5 @@ public class NetworkLobbyHook : LobbyHook {
         mage.color = lobby.playerColor;
         mage.playerName = lobby.name;
         mage.SetPlayerId(lobby.playerId);
-        Debug.Log("Set player id" + lobby.playerId);
     }
 }
