@@ -6,7 +6,7 @@ using Prototype.NetworkLobby;
 
 public class PlayerHealth : NetworkBehaviour
 {
-    public const int maxHealth = 100;
+    public const int maxHealth = 10;
 
     [SyncVar(hook = "OnChangeHealth")]
     public int currentHealth = maxHealth;
@@ -32,8 +32,13 @@ public class PlayerHealth : NetworkBehaviour
             {
                 LobbyPlayer localPlayer = LobbyPlayerList._instance._players[i] as LobbyPlayer;
                 score[i] = localPlayer.score;
+                if(score[i] == 3)
+                {
+                    StartCoroutine(LobbyManager.s_Singleton.ReturnToLoby());
+                }
             }
             RpcUpdateHudScore(score);
+
         }
     }
 

@@ -4,21 +4,22 @@ using UnityEngine;
 using UnityEngine.Networking;
 public class Fireball : NetworkBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        
+    }
 
 
     void OnParticleCollision(GameObject other)
     {
+        Debug.Log("Collision");
         if (!isServer)
-           return;
+            return;
         var hit = other.gameObject;
         var playerHealth = hit.GetComponent<PlayerHealth>();
         if (playerHealth != null)
@@ -26,7 +27,7 @@ public class Fireball : NetworkBehaviour {
             playerHealth.TakeDamage(10);
         }
 
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
-}
+    }
