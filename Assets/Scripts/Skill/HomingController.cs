@@ -62,7 +62,6 @@ public class HomingController : NetworkBehaviour
             transform.rotation = rigidbody.transform.rotation;
             cooldownSkill.SetActive(true);
             StartCoroutine(Attack());
-            //CmdSpawnSkill();
         }
     }
 
@@ -72,10 +71,12 @@ public class HomingController : NetworkBehaviour
         anim.SetBool("Attack", false);
         CmdSpawnSkill();
     }
+
     [Command]
     void CmdSpawnSkill()
     {
-        var attackSkill = (GameObject)Instantiate(skill, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
-        NetworkServer.Spawn(attackSkill);
+		GameObject attackSkill = (GameObject)Instantiate(skill, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
+		attackSkill.GetComponent<HomingSkill>().idOwner = GetComponent<PlayerMageController>().playerId;
+		NetworkServer.SpawnWithClientAuthority(attackSkill,connectionToClient);
     }
 }
