@@ -6,7 +6,8 @@ public class InfinteLoading : MonoBehaviour {
 
 	public Transform LoadingBar;
 	[SerializeField] private float current;
-	[SerializeField] private float speed;
+	[SerializeField]
+	private float speed;
 
 
 	// Use this for initialization

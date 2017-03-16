@@ -7,6 +7,9 @@ namespace Prototype.NetworkLobby
 
 	public class MainMenu : MonoBehaviour {
 
+		[SerializeField]
+		protected GameObject m_QuitButton;
+
     	public LobbyManager lobbyManager;
 		public RectTransform lobbyServerList;
 		public RectTransform createRoomPanel;
@@ -15,13 +18,20 @@ namespace Prototype.NetworkLobby
    		{
 			lobbyManager.StartMatchMaker();
 			lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
+			Debug.Log("SimpleBackClbk");
       	  	lobbyManager.ChangeTo(lobbyServerList);
 		}
 
 		public void OnClickCreateRoom()
 		{
 			lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
+			Debug.Log("SimpleBackClbk");
 			lobbyManager.ChangeTo(createRoomPanel);
+		}
+
+		public void OnClickQuitGame()
+		{
+			Application.Quit();
 		}
 	}
 
