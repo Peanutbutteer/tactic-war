@@ -272,6 +272,14 @@ namespace Prototype.NetworkLobby
 
 			ChangeTo(lobbyPanel);
 			backDelegate = StopHostClbk;
+
+			if (_isMatchmaking && matchMaker == null)
+			{
+				StopHost();
+			}
+				
+
+			Debug.Log("StopHostClbk");
 		}
 
 		public override void OnStopHost()
