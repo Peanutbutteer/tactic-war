@@ -45,6 +45,8 @@ namespace Prototype.NetworkLobby
         public bool _isMatchmaking = false;
 
         protected bool _disconnectServer = false;
+
+		public bool isInGame = false;
         
         protected ulong _currentMatchID;
 
@@ -64,8 +66,44 @@ namespace Prototype.NetworkLobby
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
-            Debug.Log("OnLobbyClientSceneChanged");
-            lobbyPanel.gameObject.SetActive(false);
+			if (SceneManager.GetSceneAt(0).name == lobbyScene)
+			{
+				if (isInGame)
+				{
+					ChangeTo(lobbyPanel);
+					if (_isMatchmaking)
+					{
+						if (conn.playerControllers[0].unetView.isServer)
+						{
+							backDelegate = StopHostClbk;
+						}
+						else
+						{
+							backDelegate = StopClientClbk;
+						}
+					}
+					else
+					{
+						if (conn.playerControllers[0].unetView.isClient)
+						{
+							backDelegate = StopHostClbk;
+						}
+						else
+						{
+							backDelegate = StopClientClbk;
+						}
+					}
+				}
+				else
+				{
+					ChangeTo(mainMenuPanel);
+				}
+			}
+			else
+			{
+				ChangeTo(null);
+				isInGame = true;
+			}
         }
 
         public void ChangeTo(RectTransform newPanel)
@@ -216,7 +254,6 @@ namespace Prototype.NetworkLobby
             LobbyPlayer newPlayer = obj.GetComponent<LobbyPlayer>();
             newPlayer.ToggleJoinButton(numPlayers + 1 >= minPlayers);
 
-
             for (int i = 0; i < lobbySlots.Length; ++i)
             {
                 LobbyPlayer p = lobbySlots[i] as LobbyPlayer;
@@ -360,8 +397,15 @@ namespace Prototype.NetworkLobby
         }
 
         public void DisconnectAndReturnToMenu() {
-            StopClientClbk();
+            backDelegate();
             ChangeTo(mainMenuPanel);
         }
+
+		public IEnumerator ReturnToLoby()
+		{
+			yield return new WaitForSeconds(3.0f);
+			LobbyManager.s_Singleton.ServerReturnToLobby();
+		}
+
     }
 }

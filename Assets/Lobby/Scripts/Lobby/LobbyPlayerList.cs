@@ -13,7 +13,7 @@ namespace Prototype.NetworkLobby
         public RectTransform playerListContentTransform;
 
         protected VerticalLayoutGroup _layout;
-        protected List<LobbyPlayer> _players = new List<LobbyPlayer>();
+        public List<LobbyPlayer> _players = new List<LobbyPlayer>();
 
         public void OnEnable()
         {
@@ -54,6 +54,7 @@ namespace Prototype.NetworkLobby
             foreach (LobbyPlayer p in _players)
             {
                 p.OnPlayerListChanged(i);
+                p.SetPlayerId(i);
                 ++i;
             }
         }

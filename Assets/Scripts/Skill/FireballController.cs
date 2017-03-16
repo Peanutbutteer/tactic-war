@@ -74,4 +74,16 @@ public class FireballController : NetworkBehaviour
         var attackSkill = (GameObject)Instantiate(skill, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
         NetworkServer.Spawn(attackSkill);
     }
+
+
+    //void OnParticleCollision(GameObject other)
+    //{
+    //    var playerHealth = GetComponent<PlayerHealth>();
+    //    if (playerHealth != null)
+    //    {
+    //        playerHealth.TakeDamage(10);
+    //    }
+
+    //    Destroy(other);
+    //}
 }

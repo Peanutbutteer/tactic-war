@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-	public GameObject startGameScene;
+    static public List<PlayerMageController> s_Player = new List<PlayerMageController>();
+
 	// Use this for initialization
 	void Start () {
-		
+        DontDestroyOnLoad(this);
 	}
 	
 	// Update is called once per frame
@@ -17,10 +18,11 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void OnStart() {
-		startGameScene.SetActive (false);
+
 	}
 
 	public void OnExit() {
 		Application.Quit ();
 	}
+
 }

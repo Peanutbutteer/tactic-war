@@ -1,16 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class HomingSkill : MonoBehaviour
+using UnityEngine.Networking;
+public class HomingSkill : NetworkBehaviour
 {
     public float missileVelocity = 0.1f;
-    public GameObject target;
     private Rigidbody homingMissile;
+	[SyncVar]
+	public int idOwner;
     // Use this for initialization
     void Start()
     {
-        homingMissile = GetComponent<Rigidbody>();
+		homingMissile = GetComponent<Rigidbody>();
+		Debug.Log("ID Owner:" + idOwner);
     }
 
     // Update is called once per frame
@@ -22,14 +24,21 @@ public class HomingSkill : MonoBehaviour
 
     void Update()
     {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (var item in players)
+        {
+			if (!(item.GetComponent<PlayerMageController>().playerId == idOwner) && Vector3.Distance(transform.position, item.transform.position) < 20)
+            {
+                {
+                    var targetRotation = Quaternion.LookRotation(item.transform.position - transform.position);
+
+                    homingMissile.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, 2.5f));
+                }
+            }
+        }
+
         homingMissile.velocity = transform.forward * missileVelocity;
 
-        if (Vector3.Distance(transform.position, target.transform.position) < 20)
-        {
-            var targetRotation = Quaternion.LookRotation(target.transform.position - transform.position);
-
-            homingMissile.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, 2.5f));
-        }
     }
     void OnParticleCollision(GameObject other)
     {
