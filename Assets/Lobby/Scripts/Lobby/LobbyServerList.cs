@@ -15,6 +15,8 @@ namespace Prototype.NetworkLobby
         public GameObject serverEntryPrefab;
         public GameObject noServerFound;
 
+		public LobbyInfoPanel infoPanel;
+
         protected int currentPage = 0;
         protected int previousPage = 0;
 
@@ -23,8 +25,20 @@ namespace Prototype.NetworkLobby
 
         void OnEnable()
         {
+			if (lobbyManager != null)
+			{
+				lobbyManager.clientDisconnected += OnDisconnect;
+			}
             onRefreshButton();
         }
+
+		void OnDisable() 
+		{
+			if (lobbyManager != null)
+			{
+				lobbyManager.clientDisconnected -= OnDisconnect;
+			}
+		}
 
         public void onRefreshButton() {
             currentPage = 0;
@@ -82,6 +96,17 @@ namespace Prototype.NetworkLobby
             previousPage = currentPage;
             currentPage = page;
 			lobbyManager.matchMaker.ListMatches(page, 6, "", true, 0, 0, OnGUIMatchList);
+		}
+
+		protected virtual void OnDisconnect(UnityEngine.Networking.NetworkConnection conn)
+		{
+			if (lobbyManager != null)
+			{
+				lobbyManager.ShowDefaultPanel();
+				infoPanel.Display("Disconnected from server","Cancel", null);
+			
+				lobbyManager.Disconnect();
+			}
 		}
     }
 }

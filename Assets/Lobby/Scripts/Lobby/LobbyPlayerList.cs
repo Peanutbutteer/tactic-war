@@ -8,6 +8,8 @@ namespace Prototype.NetworkLobby
     //List of players in the lobby
     public class LobbyPlayerList : MonoBehaviour
     {
+		public LobbyManager lobbyManager;
+		public LobbyInfoPanel infoPanel;
         public static LobbyPlayerList _instance = null;
 
         public RectTransform playerListContentTransform;
@@ -19,7 +21,19 @@ namespace Prototype.NetworkLobby
         {
             _instance = this;
             _layout = playerListContentTransform.GetComponent<VerticalLayoutGroup>();
+			if (lobbyManager != null)
+			{
+				lobbyManager.clientDisconnected += OnDisconnect;
+			}
         }
+
+		void OnDisable()
+		{
+			if (lobbyManager != null)
+			{
+				lobbyManager.clientDisconnected -= OnDisconnect;
+			}
+		}
 
         void Update()
         {
@@ -58,5 +72,16 @@ namespace Prototype.NetworkLobby
                 ++i;
             }
         }
+
+		protected virtual void OnDisconnect(UnityEngine.Networking.NetworkConnection conn)
+		{
+			if (lobbyManager != null)
+			{
+				lobbyManager.ShowDefaultPanel();
+				infoPanel.Display("Disconnected from server", "Cancel", null);
+
+				lobbyManager.Disconnect();
+			}
+		}
     }
 }

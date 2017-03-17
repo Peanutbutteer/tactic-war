@@ -1,10 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Types;
 using UnityEngine.Networking.Match;
 using System.Collections;
+using System;
 
 
 namespace Prototype.NetworkLobby
@@ -65,6 +67,8 @@ namespace Prototype.NetworkLobby
 		protected ulong _currentMatchID;
 
 		protected LobbyHook _lobbyHooks;
+
+		public event Action<NetworkConnection> clientDisconnected;
 
 		void Start()
 		{
@@ -458,8 +462,14 @@ namespace Prototype.NetworkLobby
 		{
 			// Call on client when client is disconnect
 			base.OnClientDisconnect(conn);
-			infoPanel.Display("Disconnect from Server", "Cancel", null);
-			ChangeTo(mainMenuPanel);
+
+			if (clientDisconnected != null)
+			{
+				clientDisconnected(conn);
+			}
+
+			//infoPanel.Display("Disconnect from Server", "Cancel", null);
+			//ChangeTo(mainMenuPanel);
 		}
 
 		public override void OnLobbyClientDisconnect(NetworkConnection conn)
@@ -475,7 +485,8 @@ namespace Prototype.NetworkLobby
 
 		public void DisconnectAndReturnToMenu()
 		{
-			backDelegate();
+			Debug.Log("DisconnectAndReturnToMenu");
+			Disconnect();
 			ChangeTo(mainMenuPanel);
 		}
 
@@ -483,6 +494,11 @@ namespace Prototype.NetworkLobby
 		{
 			yield return new WaitForSeconds(3.0f);
 			LobbyManager.s_Singleton.ServerReturnToLobby();
+		}
+
+		public void Disconnect()
+		{
+			backDelegate();
 		}
 
 	}
