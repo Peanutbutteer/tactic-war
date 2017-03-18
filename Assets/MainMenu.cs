@@ -14,22 +14,17 @@ namespace Prototype.NetworkLobby
 
 		public void OnClickOpenServerList()
    		{
-			//lobbyManager.StartMatchingmakingClient();
-
-			lobbyManager.StartMatchMaker();
-			lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
+			lobbyManager.StartMatchingmakingClient();
       	  	lobbyManager.ChangeTo(lobbyServerList);
 		}
 
 		public void OnClickCreateRoom()
 		{
-			lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
 			lobbyManager.ChangeTo(createRoomPanel);
 		}
 
 		public void OnClickAboutUs()
 		{
-			lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
 			lobbyManager.ChangeTo(aboutPanel);
 		}
 

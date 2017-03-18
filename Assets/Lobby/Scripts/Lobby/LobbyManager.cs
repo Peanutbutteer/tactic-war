@@ -19,9 +19,13 @@ namespace Prototype.NetworkLobby
 
 	public enum GameState
 	{
+		Inactive,
+		Pregame,
+		Connecting,
 		InLobby,
-		Connecting
+		InGame
 	}
+
 
 	public class LobbyManager : NetworkLobbyManager
 	{
@@ -29,8 +33,11 @@ namespace Prototype.NetworkLobby
 
 		static public LobbyManager s_Singleton;
 
-
-		public static GameState s_State;
+		public GameState state
+		{
+			get;
+			set;
+		}
 
 		public static MenuPage s_ReturnPage;
 
@@ -42,6 +49,13 @@ namespace Prototype.NetworkLobby
 
 		public event Action matchDropped;
 
+		public static bool s_IsServer
+		{
+			get
+			{
+				return NetworkServer.active;
+			}
+		}
 
 
 		[Header("Unity UI Lobby")]
@@ -66,10 +80,6 @@ namespace Prototype.NetworkLobby
 		//of players, so that even client know how many player there is.
 		[HideInInspector]
 		public int _playerNumber = 0;
-
-		//used to disconnect a client properly when exiting the matchmaker
-		[HideInInspector]
-		public bool _isMatchmaking = false;
 
 		protected bool _disconnectServer = false;
 
@@ -108,6 +118,14 @@ namespace Prototype.NetworkLobby
 			}
 		}
 
+		protected virtual void OnDestroy()
+		{
+			if (s_Singleton == this)
+			{
+				s_Singleton = null;
+			}
+		}
+
 		public void ShowDefaultPanel()
 		{
 			ChangeTo(mainMenuPanel);
@@ -120,7 +138,18 @@ namespace Prototype.NetworkLobby
 
 		public void ShowInfoPopup(string info)
 		{
-			infoPanel.Display(info, "Cancel", null);
+			if (infoPanel != null)
+			{
+				infoPanel.Display(info, "Cancel", null);
+			}
+		}
+
+		public void HideInfoPopup()
+		{
+			if (infoPanel != null)
+			{
+				infoPanel.gameObject.SetActive(false);
+			}
 		}
 
 
@@ -128,45 +157,11 @@ namespace Prototype.NetworkLobby
 		{
 			if (SceneManager.GetSceneAt(0).name == lobbyScene)
 			{
-				if (isInGame)
-				{
-					ChangeTo(lobbyPanel);
-					if (_isMatchmaking)
-					{
-						if (conn.playerControllers[0].unetView.isServer)
-						{
-							backDelegate = StopHostClbk;
-							Debug.Log("StopHostClbk");
-						}
-						else
-						{
-							backDelegate = StopClientClbk;
-							Debug.Log("StopClientClbk");
-						}
-					}
-					else
-					{
-						if (conn.playerControllers[0].unetView.isClient)
-						{
-							backDelegate = StopHostClbk;
-							Debug.Log("StopHostClbk");
-						}
-						else
-						{
-							backDelegate = StopClientClbk;
-							Debug.Log("StopClientClbk");
-						}
-					}
-				}
-				else
-				{
-					ChangeTo(mainMenuPanel);
-				}
+				ChangeTo(mainMenuPanel);
 			}
 			else
 			{
 				ChangeTo(null);
-				isInGame = true;
 			}
 		}
 
@@ -176,98 +171,11 @@ namespace Prototype.NetworkLobby
 			{
 				currentPanel.gameObject.SetActive(false);
 			}
-
+			currentPanel = newPanel;
 			if (newPanel != null)
 			{
 				newPanel.gameObject.SetActive(true);
 			}
-
-			currentPanel = newPanel;
-
-			if (currentPanel != mainMenuPanel)
-			{
-
-			}
-			else
-			{
-				_isMatchmaking = false;
-			}
-		}
-
-		public void DisplayIsConnecting()
-		{
-			var _this = this;
-			infoPanel.Display("Connecting...", "Cancel", () =>
-			{
-				_this.backDelegate();
-				Debug.Log("Cancel");
-				Debug.Log(backDelegate.Method);
-			});
-		}
-
-
-		public delegate void BackButtonDelegate();
-		public BackButtonDelegate backDelegate;
-		public void GoBackButton()
-		{
-			backDelegate();
-		}
-
-		// ----------------- Server management
-
-		public void AddLocalPlayer()
-		{
-			TryToAddPlayer();
-		}
-
-		public void RemovePlayer(LobbyPlayer player)
-		{
-			player.RemovePlayer();
-		}
-
-		public void SimpleBackClbk()
-		{
-			ChangeTo(mainMenuPanel);
-		}
-
-		public void StopHostClbk()
-		{
-			if (_isMatchmaking)
-			{
-				matchMaker.DestroyMatch((NetworkID)_currentMatchID, 0, OnDestroyMatch);
-				_disconnectServer = true;
-			}
-			else
-			{
-				StopHost();
-			}
-
-			if (s_State == GameState.Connecting)
-			{
-
-			}
-			else
-			{
-				ChangeTo(mainMenuPanel);
-			}
-		}
-
-		public void StopClientClbk()
-		{
-			StopClient();
-
-			if (_isMatchmaking)
-			{
-				StopMatchMaker();
-			}
-
-			ChangeTo(mainMenuPanel);
-		}
-
-		public void StopServerClbk()
-		{
-			StopServer();
-			ChangeTo(mainMenuPanel);
 		}
 
 		class KickMsg : MessageBase { }
@@ -276,6 +184,21 @@ namespace Prototype.NetworkLobby
 			conn.Send(MsgKicked, new KickMsg());
 		}
 
+		public void ShowConnectingModal(bool reconnectMatchmakingClient)
+		{
+			infoPanel.Display("Connecting...", "Cancel", () =>
+			{
+				if (reconnectMatchmakingClient)
+				{
+					Disconnect();
+					StartMatchingmakingClient();
+				}
+				else
+				{
+					Disconnect();
+				}
+			});
+		}
 
 
 
@@ -290,27 +213,11 @@ namespace Prototype.NetworkLobby
 		public override void OnStartHost()
 		{
 			base.OnStartHost();
-
-			ChangeTo(lobbyPanel);
-			backDelegate = StopHostClbk;
-
-			if (_isMatchmaking && matchMaker == null)
-			{
-				StopHost();
-			}
-
-
-			Debug.Log("StopHostClbk");
 		}
 
 		public override void OnStopHost()
 		{
 			base.OnStopHost();
-			Debug.Log("OnStopHost");
-			if (s_State == GameState.Connecting)
-			{
-				backDelegate = SimpleBackClbk;
-			}
 		}
 
 		public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
@@ -430,7 +337,7 @@ namespace Prototype.NetworkLobby
 		{
 			base.OnClientConnect(conn);
 
-			s_State = GameState.InLobby;
+			state = GameState.InLobby;
 			infoPanel.gameObject.SetActive(false);
 
 			Debug.Log("OnClientConnect");
@@ -440,7 +347,6 @@ namespace Prototype.NetworkLobby
 			if (!NetworkServer.active)
 			{//only to do on pure client (not self hosting client)
 				ChangeTo(lobbyPanel);
-				backDelegate = StopClientClbk;
 			}
 		}
 
@@ -472,20 +378,114 @@ namespace Prototype.NetworkLobby
 
 		public void DisconnectAndReturnToMenu()
 		{
-			Debug.Log("DisconnectAndReturnToMenu");
 			Disconnect();
 			ChangeTo(mainMenuPanel);
+		}
+
+		public override void OnStartClient(NetworkClient lobbyClient)
+		{
+			base.OnStartClient(lobbyClient);
+			// Change to lobby on Create Game
+			ChangeTo(lobbyPanel);
 		}
 
 		public IEnumerator ReturnToLoby()
 		{
 			yield return new WaitForSeconds(3.0f);
-			LobbyManager.s_Singleton.ServerReturnToLobby();
+			ServerReturnToLobby();
+		}
+
+		public void StartMatchingmakingClient()
+		{
+			state = GameState.Pregame;
+			StartMatchMaker();
 		}
 
 		public void Disconnect()
 		{
-			backDelegate();
+			switch (state)
+			{
+				case GameState.Pregame:
+					if (s_IsServer)
+					{
+						Debug.LogError("Server should never be in this state.");
+					}
+					else
+					{
+						StopMatchMaker();
+					}
+					break;
+
+				case GameState.Connecting:
+					if (s_IsServer)
+					{
+						StopMatchMaker();
+						StopHost();
+						matchInfo = null;
+					}
+					else
+					{
+						StopMatchMaker();
+						StopClient();
+						matchInfo = null;
+					}
+					break;
+
+				case GameState.InLobby:
+				case GameState.InGame:
+					if (s_IsServer)
+					{
+						if (matchMaker != null && matchInfo != null)
+						{
+							matchMaker.DestroyMatch(matchInfo.networkId, 0, (success, info) =>
+								{
+									if (!success)
+									{
+										Debug.LogErrorFormat("Failed to terminate matchmaking game. {0}", info);
+									}
+									StopMatchMaker();
+									StopHost();
+
+									matchInfo = null;
+								});
+						}
+						else
+						{
+							Debug.LogWarning("No matchmaker or matchInfo despite being a server in matchmaking state.");
+
+							StopMatchMaker();
+							StopHost();
+							matchInfo = null;
+						}
+					}
+					else
+					{
+						if (matchMaker != null && matchInfo != null)
+						{
+							matchMaker.DropConnection(matchInfo.networkId, matchInfo.nodeId, 0, (success, info) =>
+								{
+									if (!success)
+									{
+										Debug.LogErrorFormat("Failed to disconnect from matchmaking game. {0}", info);
+									}
+									StopMatchMaker();
+									StopClient();
+									matchInfo = null;
+								});
+						}
+						else
+						{
+							Debug.LogWarning("No matchmaker or matchInfo despite being a client in matchmaking state.");
+
+							StopMatchMaker();
+							StopClient();
+							matchInfo = null;
+						}
+					}
+					break;
+			}
+
+			state = GameState.Inactive;
 		}
 
 	}
