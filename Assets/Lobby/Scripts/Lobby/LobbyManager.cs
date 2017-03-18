@@ -304,6 +304,26 @@ namespace Prototype.NetworkLobby
 			}
 		}
 
+		//	public override void OnMatchJoined(bool success, string extendedInfo, MatchInfo matchInfo)
+		//{
+		//	base.OnMatchJoined(success, extendedInfo, matchInfo);
+		//	Debug.Log("OnMatchJoined");
+
+		//	if (success)
+		//	{
+		//		HideInfoPopup();
+		//		ShowInfoPopup("Entering lobby...");
+		//		state = GameState.InLobby;
+		//		HideInfoPopup();
+		//		ChangeTo(lobbyPanel);
+		//	}
+		//	else
+		//	{
+		//		ShowInfoPopup("Failed to join game.");
+		//		state = GameState.Pregame;
+		//	}
+		//}
+
 		public override void OnDestroyMatch(bool success, string extendedInfo)
 		{
 			base.OnDestroyMatch(success, extendedInfo);

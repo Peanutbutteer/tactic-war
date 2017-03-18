@@ -44,6 +44,7 @@ namespace Prototype.NetworkLobby
 		{
 			if (lobbyManager != null)
 			{
+				settingsPanel.close();
 				lobbyManager.DisconnectAndReturnToMenu();
 			}
 		}
