@@ -262,11 +262,23 @@ namespace Prototype.NetworkLobby
         }
 
         [ClientRpc]
-        public void RpcUpdateCountdown(int countdown)
+        public void RpcUpdateCountdown()
         {
-            LobbyManager.s_Singleton.countdownPanel.UIText.text = "Match Starting in " + countdown;
-            LobbyManager.s_Singleton.countdownPanel.gameObject.SetActive(countdown != 0);
-        }
+            //LobbyManager.s_Singleton.countdownPanel.UIText.text = "Match Starting in " + countdown;
+            //LobbyManager.s_Singleton.countdownPanel.gameObject.SetActive(countdown != 0);
+			if (isLocalPlayer)
+			{
+				// Show loading screen
+				LoadingModal loading = LoadingModal.s_Instance;
+
+				if (loading != null)
+				{
+					//loading.FadeIn();
+					loading.FadeOut();
+				}
+			}
+
+		}
 
         [ClientRpc]
         public void RpcUpdateRemoveButton()

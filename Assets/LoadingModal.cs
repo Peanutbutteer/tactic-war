@@ -6,6 +6,12 @@ public class LoadingModal : MonoBehaviour {
 
 	private FadingGroup m_Fader;
 
+	public FadingGroup fader
+	{
+		get;
+	}
+
+
 	public virtual void CloseModal()
 	{
 		gameObject.SetActive(false);

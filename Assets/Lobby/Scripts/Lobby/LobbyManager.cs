@@ -397,47 +397,17 @@ namespace Prototype.NetworkLobby
 			}
 
 			if (allready)
-				StartCoroutine(ServerCountdownCoroutine());
-		}
-
-		public IEnumerator ServerCountdownCoroutine()
-		{
-			float remainingTime = prematchCountdown;
-			int floorTime = Mathf.FloorToInt(remainingTime);
-
-			while (remainingTime > 0)
 			{
-				yield return null;
-
-				remainingTime -= Time.deltaTime;
-				int newFloorTime = Mathf.FloorToInt(remainingTime);
-
-				if (newFloorTime != floorTime)
-				{//to avoid flooding the network of message, we only send a notice to client when the number of plain seconds change.
-					floorTime = newFloorTime;
-
-					for (int i = 0; i < lobbySlots.Length; ++i)
+				for (int i = 0; i < lobbySlots.Length; ++i)
+				{
+					if (lobbySlots[i] != null)
 					{
-						if (lobbySlots[i] != null)
-						{//there is maxPlayer slots, so some could be == null, need to test it before accessing!
-							(lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown(floorTime);
-						}
+						(lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown();
 					}
 				}
+				ServerChangeScene(playScene);
 			}
-
-			for (int i = 0; i < lobbySlots.Length; ++i)
-			{
-				if (lobbySlots[i] != null)
-				{
-					(lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown(0);
-				}
-			}
-
-			ServerChangeScene(playScene);
 		}
-
-		// ----------------- Client callbacks ------------------
 
 		public override void OnClientConnect(NetworkConnection conn)
 		{
