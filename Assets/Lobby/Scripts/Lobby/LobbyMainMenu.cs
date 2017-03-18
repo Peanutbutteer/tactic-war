@@ -27,8 +27,10 @@ namespace Prototype.NetworkLobby
 				"", "", "", 0, 0,
 				lobbyManager.OnMatchCreate);
 
-            lobbyManager.backDelegate = lobbyManager.StopHost;
+			lobbyManager.backDelegate = lobbyManager.StopHost;
+			Debug.Log("OnClickCreateMatchmakingGame");
             lobbyManager._isMatchmaking = true;
+			LobbyManager.s_State = LobbyManager.GameState.Connecting;
             lobbyManager.DisplayIsConnecting();
 
          }

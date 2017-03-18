@@ -10,6 +10,7 @@ namespace Prototype.NetworkLobby
     	public LobbyManager lobbyManager;
 		public RectTransform lobbyServerList;
 		public RectTransform createRoomPanel;
+		public RectTransform aboutPanel;
 
 		public void OnClickOpenServerList()
    		{
@@ -22,6 +23,17 @@ namespace Prototype.NetworkLobby
 		{
 			lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
 			lobbyManager.ChangeTo(createRoomPanel);
+		}
+
+		public void OnClickAboutUs()
+		{
+			lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
+			lobbyManager.ChangeTo(aboutPanel);
+		}
+
+		public void OnClickQuitGame()
+		{
+			Application.Quit();
 		}
 	}
 
