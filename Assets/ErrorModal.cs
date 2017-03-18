@@ -17,11 +17,11 @@ public class ErrorModal : MonoBehaviour {
 		}
 
 		public void CloseModal() {
-
+			gameObject.SetActive(false);
 		}
 
 		public void Show() {
-			
+			gameObject.SetActive(true);
 		}
 
 		protected Action m_Callback;

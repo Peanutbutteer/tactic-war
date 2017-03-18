@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoadingModal : MonoBehaviour {
+public class LoadingModal : MonoBehaviour
+{
 
 	private FadingGroup m_Fader;
 
@@ -53,12 +54,7 @@ public class LoadingModal : MonoBehaviour {
 
 	protected virtual void Awake()
 	{
-		if (s_Instance != null)
-		{
-			Debug.Log("<color=lightblue>Trying to create a second instance of LoadingModal</color");
-			Destroy(gameObject);
-		}
-		else
+		if (s_Instance == null)
 		{
 			s_Instance = this;
 		}

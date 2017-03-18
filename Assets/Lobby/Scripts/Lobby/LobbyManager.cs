@@ -17,6 +17,14 @@ namespace Prototype.NetworkLobby
 		Lobby
 	}
 
+
+	public enum SceneChangeMode
+	{
+		None,
+		Game,
+		Menu
+	}
+
 	public enum GameState
 	{
 		Inactive,
@@ -57,6 +65,13 @@ namespace Prototype.NetworkLobby
 			}
 		}
 
+		private SceneChangeMode m_SceneChangeMode = SceneChangeMode.None;
+
+		public static bool s_InstanceExists
+		{
+			get { return s_Singleton != null; }
+		}
+
 
 		[Header("Unity UI Lobby")]
 		[Tooltip("Time in second between all players ready & match start")]
@@ -80,10 +95,6 @@ namespace Prototype.NetworkLobby
 		//of players, so that even client know how many player there is.
 		[HideInInspector]
 		public int _playerNumber = 0;
-
-		protected bool _disconnectServer = false;
-
-		public bool isInGame = false;
 
 		protected ulong _currentMatchID;
 
@@ -118,11 +129,53 @@ namespace Prototype.NetworkLobby
 			}
 		}
 
+		protected virtual void Awake()
+		{
+			if (s_Singleton != null)
+			{
+				Destroy(gameObject);
+			}
+			else
+			{
+				s_Singleton = this;
+			}
+		}
+
 		protected virtual void OnDestroy()
 		{
 			if (s_Singleton == this)
 			{
 				s_Singleton = null;
+			}
+		}
+
+		void Update()
+		{
+			if (m_SceneChangeMode != SceneChangeMode.None)
+			{
+				if (m_SceneChangeMode == SceneChangeMode.Menu)
+				{
+					if (state != GameState.Inactive)
+					{
+					Debug.Log("ServerChangeScene");
+						ServerChangeScene(lobbyScene);
+					}
+					else
+					{
+						ShowDefaultPanel();
+					}
+					Debug.Log("ShowDefaultPanel");
+				}
+				else
+				{
+					LoadingModal modal = LoadingModal.s_Instance;
+					if (modal != null)
+					{
+						modal.FadeOut();
+					}
+				}
+
+				m_SceneChangeMode = SceneChangeMode.None;
 			}
 		}
 
@@ -144,6 +197,14 @@ namespace Prototype.NetworkLobby
 			}
 		}
 
+		public void ShowInfoPopup(string info, string des)
+		{
+			if (infoPanel != null)
+			{
+				infoPanel.Display(info, des, null);
+			}
+		}
+
 		public void HideInfoPopup()
 		{
 			if (infoPanel != null)
@@ -151,7 +212,6 @@ namespace Prototype.NetworkLobby
 				infoPanel.gameObject.SetActive(false);
 			}
 		}
-
 
 		public override void OnLobbyClientSceneChanged(NetworkConnection conn)
 		{
@@ -163,6 +223,12 @@ namespace Prototype.NetworkLobby
 			{
 				ChangeTo(null);
 			}
+		}
+
+		public override void OnServerSceneChanged(string sceneName)
+		{
+			base.OnServerSceneChanged(sceneName);
+			m_SceneChangeMode = SceneChangeMode.Game;
 		}
 
 		public void ChangeTo(RectTransform newPanel)
@@ -204,7 +270,7 @@ namespace Prototype.NetworkLobby
 
 		public void KickedMessageHandler(NetworkMessage netMsg)
 		{
-			infoPanel.Display("Kicked by Server", "Close", null);
+			ShowInfoPopup("Kicked by Server", "Close");
 			netMsg.conn.Disconnect();
 		}
 
@@ -224,17 +290,25 @@ namespace Prototype.NetworkLobby
 		{
 			base.OnMatchCreate(success, extendedInfo, matchInfo);
 			_currentMatchID = (System.UInt64)matchInfo.networkId;
+
+			if (success)
+			{
+				state = GameState.InLobby;
+				//HideInfoPopup();
+				//ShowLobbyPanel();
+			}
+			else
+			{
+				state = GameState.Inactive;
+				ShowInfoPopup("Failed to create game.");
+			}
 		}
 
 		public override void OnDestroyMatch(bool success, string extendedInfo)
 		{
 			base.OnDestroyMatch(success, extendedInfo);
-			Debug.Log("DestroyMatch OK T^T");
-			if (_disconnectServer)
-			{
-				StopMatchMaker();
-				StopHost();
-			}
+			StopMatchMaker();
+			StopHost();
 		}
 
 		//allow to handle the (+) button to add/remove player
@@ -309,6 +383,8 @@ namespace Prototype.NetworkLobby
 			return true;
 		}
 
+
+
 		// --- Countdown management
 
 		public override void OnLobbyServerPlayersReady()
@@ -330,6 +406,7 @@ namespace Prototype.NetworkLobby
 					}
 				}
 				ServerChangeScene(playScene);
+				state = GameState.InGame;
 			}
 		}
 
@@ -338,16 +415,10 @@ namespace Prototype.NetworkLobby
 			base.OnClientConnect(conn);
 
 			state = GameState.InLobby;
-			infoPanel.gameObject.SetActive(false);
-
-			Debug.Log("OnClientConnect");
+			HideInfoPopup();
 
 			conn.RegisterHandler(MsgKicked, KickedMessageHandler);
 
-			if (!NetworkServer.active)
-			{//only to do on pure client (not self hosting client)
-				ChangeTo(lobbyPanel);
-			}
 		}
 
 
@@ -360,9 +431,6 @@ namespace Prototype.NetworkLobby
 			{
 				clientDisconnected(conn);
 			}
-
-			//infoPanel.Display("Disconnect from Server", "Cancel", null);
-			//ChangeTo(mainMenuPanel);
 		}
 
 		public override void OnLobbyClientDisconnect(NetworkConnection conn)
@@ -370,16 +438,69 @@ namespace Prototype.NetworkLobby
 			base.OnLobbyClientDisconnect(conn);
 		}
 
+
 		public override void OnClientError(NetworkConnection conn, int errorCode)
 		{
-			ChangeTo(mainMenuPanel);
-			infoPanel.Display("Cient error : " + (errorCode == 6 ? "timeout" : errorCode.ToString()), "Close", null);
+			base.OnClientError(conn, errorCode);
+
+			if (clientError != null)
+			{
+				clientError(conn, errorCode);
+			}
+		}
+
+		public override void OnDropConnection(bool success, string extendedInfo)
+		{
+			base.OnDropConnection(success, extendedInfo);
+
+			if (matchDropped != null)
+			{
+				matchDropped();
+			}
+		}
+
+		public override void OnServerError(NetworkConnection conn, int errorCode)
+		{
+			base.OnServerError(conn, errorCode);
+
+			if (serverError != null)
+			{
+				serverError(conn, errorCode);
+			}
 		}
 
 		public void DisconnectAndReturnToMenu()
 		{
 			Disconnect();
-			ChangeTo(mainMenuPanel);
+			ReturnToMenu(MenuPage.Home);
+		}
+
+		public void ReturnToMenu(MenuPage returnPage)
+		{
+			s_ReturnPage = returnPage;
+
+			m_SceneChangeMode = SceneChangeMode.Menu;
+
+			if (s_IsServer && state == GameState.InGame)
+			{
+				for (int i = 0; i < lobbySlots.Length; ++i)
+				{
+					if (lobbySlots[i] != null)
+					{
+						(lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown();
+					}
+				}
+			}
+
+			else
+			{
+				LoadingModal loading = LoadingModal.s_Instance;
+
+				if (loading != null)
+				{
+					loading.FadeOut();
+				}
+			}
 		}
 
 		public override void OnStartClient(NetworkClient lobbyClient)
@@ -387,6 +508,7 @@ namespace Prototype.NetworkLobby
 			base.OnStartClient(lobbyClient);
 			// Change to lobby on Create Game
 			ChangeTo(lobbyPanel);
+
 		}
 
 		public IEnumerator ReturnToLoby()

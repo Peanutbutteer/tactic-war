@@ -20,7 +20,6 @@ namespace Prototype.NetworkLobby
 				lobbyManager.matchDropped += OnDrop;
 				lobbyManager.clientError += OnError;
 				lobbyManager.serverError += OnError;
-
 			}
 		}
 
@@ -53,7 +52,7 @@ namespace Prototype.NetworkLobby
 		{
 			if (lobbyManager != null)
 			{
-				errorPanel.SetupTimer(2f, lobbyManager.DisconnectAndReturnToMenu);
+				errorPanel.SetupTimer(10f, lobbyManager.DisconnectAndReturnToMenu);
 				errorPanel.Show();
 			}
 		}
