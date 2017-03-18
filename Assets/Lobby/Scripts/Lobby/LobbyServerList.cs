@@ -7,32 +7,32 @@ using System.Collections.Generic;
 
 namespace Prototype.NetworkLobby
 {
-    public class LobbyServerList : MonoBehaviour
-    {
-        public LobbyManager lobbyManager;
+	public class LobbyServerList : MonoBehaviour
+	{
+		public LobbyManager lobbyManager;
 
-        public RectTransform serverListRect;
-        public GameObject serverEntryPrefab;
-        public GameObject noServerFound;
+		public RectTransform serverListRect;
+		public GameObject serverEntryPrefab;
+		public GameObject noServerFound;
 
 		public LobbyInfoPanel infoPanel;
 
-        protected int currentPage = 0;
-        protected int previousPage = 0;
+		protected int currentPage = 0;
+		protected int previousPage = 0;
 
-        static Color OddServerColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-        static Color EvenServerColor = new Color(.94f, .94f, .94f, 1.0f);
+		static Color OddServerColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+		static Color EvenServerColor = new Color(.94f, .94f, .94f, 1.0f);
 
-        void OnEnable()
-        {
+		void OnEnable()
+		{
 			if (lobbyManager != null)
 			{
 				lobbyManager.clientDisconnected += OnDisconnect;
 			}
-            onRefreshButton();
-        }
+			onRefreshButton();
+		}
 
-		void OnDisable() 
+		void OnDisable()
 		{
 			if (lobbyManager != null)
 			{
@@ -40,61 +40,69 @@ namespace Prototype.NetworkLobby
 			}
 		}
 
-        public void onRefreshButton() {
-            currentPage = 0;
-            previousPage = 0;
+		public void onBackClicked()
+		{
+			LobbyManager.s_Singleton.Disconnect();
+			LobbyManager.s_Singleton.ShowDefaultPanel();
+		}
 
-            foreach (Transform t in serverListRect)
-                Destroy(t.gameObject);
 
-            noServerFound.SetActive(false);
+		public void onRefreshButton()
+		{
+			currentPage = 0;
+			previousPage = 0;
 
-            RequestPage(0);
-        }
+			foreach (Transform t in serverListRect)
+				Destroy(t.gameObject);
+
+			noServerFound.SetActive(false);
+
+			RequestPage(0);
+		}
 
 		public void OnGUIMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
 		{
 			if (matches.Count == 0)
 			{
-                if (currentPage == 0)
-                {
-                    noServerFound.SetActive(true);
-                }
+				if (currentPage == 0)
+				{
+					noServerFound.SetActive(true);
+				}
 
-                currentPage = previousPage;
-               
-                return;
-            }
+				currentPage = previousPage;
 
-            noServerFound.SetActive(false);
-            foreach (Transform t in serverListRect)
-                Destroy(t.gameObject);
+				return;
+			}
+
+			noServerFound.SetActive(false);
+			foreach (Transform t in serverListRect)
+				Destroy(t.gameObject);
 
 			for (int i = 0; i < matches.Count; ++i)
 			{
-                GameObject o = Instantiate(serverEntryPrefab) as GameObject;
+				GameObject o = Instantiate(serverEntryPrefab) as GameObject;
 
 				o.GetComponent<LobbyServerEntry>().Populate(matches[i], lobbyManager, (i % 2 == 0) ? OddServerColor : EvenServerColor);
 
 				o.transform.SetParent(serverListRect, false);
-            }
-        }
+			}
+		}
 
-        public void ChangePage(int dir)
-        {
-            int newPage = Mathf.Max(0, currentPage + dir);
+		public void ChangePage(int dir)
+		{
+			int newPage = Mathf.Max(0, currentPage + dir);
 
-            //if we have no server currently displayed, need we need to refresh page0 first instead of trying to fetch any other page
-            if (noServerFound.activeSelf)
-                newPage = 0;
+			//if we have no server currently displayed, need we need to refresh page0 first instead of trying to fetch any other page
+			if (noServerFound.activeSelf)
+				newPage = 0;
 
-            RequestPage(newPage);
-        }
+			RequestPage(newPage);
+		}
 
-        public void RequestPage(int page)
-        {
-            previousPage = currentPage;
-            currentPage = page;
+		public void RequestPage(int page)
+		{
+			previousPage = currentPage;
+			currentPage = page;
 			lobbyManager.matchMaker.ListMatches(page, 6, "", true, 0, 0, OnGUIMatchList);
 		}
 
@@ -102,11 +110,12 @@ namespace Prototype.NetworkLobby
 		{
 			if (lobbyManager != null)
 			{
-				lobbyManager.ShowDefaultPanel();
-				infoPanel.Display("Disconnected from server","Cancel", null);
-			
+				LobbyManager.s_Singleton.ShowDefaultPanel();
+
+				infoPanel.Display("Disconnected from server", "Cancel", null);
+
 				lobbyManager.Disconnect();
 			}
 		}
-    }
+	}
 }

@@ -11,6 +11,8 @@ namespace Prototype.NetworkLobby
 
         public InputField matchNameInput;
 
+		public bool validateInput = true;
+
         public void OnEnable()
         {
             matchNameInput.onEndEdit.RemoveAllListeners();
@@ -19,21 +21,37 @@ namespace Prototype.NetworkLobby
 
         public void OnClickCreateMatchmakingGame()
         {
-            lobbyManager.StartMatchMaker();
-            lobbyManager.matchMaker.CreateMatch(
-                matchNameInput.text,
-                (uint)lobbyManager.maxPlayers,
-                true,
+			if (validateInput && string.IsNullOrEmpty(matchNameInput.text))
+			{
+
+				LobbyManager.s_Singleton.ShowInfoPopup("Server name cannot be empty!");
+				return;
+			}
+			StartMatchmakingGame();
+         }
+
+		public void StartMatchmakingGame()
+		{
+			lobbyManager.StartMatchMaker();
+			lobbyManager.matchMaker.CreateMatch(
+				matchNameInput.text,
+				(uint)lobbyManager.maxPlayers,
+				true,
 				"", "", "", 0, 0,
 				lobbyManager.OnMatchCreate);
 
 			lobbyManager.backDelegate = lobbyManager.StopHost;
 			Debug.Log("OnClickCreateMatchmakingGame");
-            lobbyManager._isMatchmaking = true;
-			LobbyManager.s_State = LobbyManager.GameState.Connecting;
-            lobbyManager.DisplayIsConnecting();
+			lobbyManager._isMatchmaking = true;
+			LobbyManager.s_State = GameState.Connecting;
+			lobbyManager.DisplayIsConnecting();
 
-         }
+
+			// for new version
+			//LobbyManager.s_Singleton.ShowConnectingModal(false);
+			//LobbyManager.s_Singleton.state = GameState.Connecting;
+
+		}
 
         void onEndEditGameName(string text)
         {
@@ -43,5 +61,10 @@ namespace Prototype.NetworkLobby
             }
         }
 
-    }
+		public void OnBackClicked()
+		{
+			LobbyManager.s_Singleton.ShowDefaultPanel();
+		}
+
+	}
 }

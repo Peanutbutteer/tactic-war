@@ -14,6 +14,8 @@ namespace Prototype.NetworkLobby
 
 		public void OnClickOpenServerList()
    		{
+			//lobbyManager.StartMatchingmakingClient();
+
 			lobbyManager.StartMatchMaker();
 			lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
       	  	lobbyManager.ChangeTo(lobbyServerList);

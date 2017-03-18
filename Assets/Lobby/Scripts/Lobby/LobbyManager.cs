@@ -11,26 +11,37 @@ using System;
 
 namespace Prototype.NetworkLobby
 {
+	public enum MenuPage
+	{
+		Home,
+		Lobby
+	}
+
+	public enum GameState
+	{
+		InLobby,
+		Connecting
+	}
+
 	public class LobbyManager : NetworkLobbyManager
 	{
 		static short MsgKicked = MsgType.Highest + 1;
 
 		static public LobbyManager s_Singleton;
-		public enum MenuPage
-		{
-			Home,
-			Lobby
-		}
 
-		public enum GameState
-		{
-			InLobby,
-			Connecting
-		}
 
 		public static GameState s_State;
 
 		public static MenuPage s_ReturnPage;
+
+		public event Action<NetworkConnection> clientConnected;
+
+		public event Action<NetworkConnection, int> serverError;
+
+		public event Action<NetworkConnection, int> clientError;
+
+		public event Action matchDropped;
+
 
 
 		[Header("Unity UI Lobby")]
@@ -107,6 +118,11 @@ namespace Prototype.NetworkLobby
 			ChangeTo(lobbyPanel);
 		}
 
+		public void ShowInfoPopup(string info)
+		{
+			infoPanel.Display(info, "Cancel", null);
+		}
+
 
 		public override void OnLobbyClientSceneChanged(NetworkConnection conn)
 		{
@@ -181,7 +197,8 @@ namespace Prototype.NetworkLobby
 		public void DisplayIsConnecting()
 		{
 			var _this = this;
-			infoPanel.Display("Connecting...", "Cancel", () => { 
+			infoPanel.Display("Connecting...", "Cancel", () =>
+			{
 				_this.backDelegate();
 				Debug.Log("Cancel");
 				Debug.Log(backDelegate.Method);
@@ -281,7 +298,7 @@ namespace Prototype.NetworkLobby
 			{
 				StopHost();
 			}
-				
+
 
 			Debug.Log("StopHostClbk");
 		}
