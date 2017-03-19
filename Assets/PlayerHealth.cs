@@ -33,8 +33,8 @@ public class PlayerHealth : NetworkBehaviour
                 LobbyPlayer localPlayer = LobbyPlayerList._instance._players[i] as LobbyPlayer;
                 score[i] = localPlayer.score;
                 if(score[i] == 3)
-                {
-                    StartCoroutine(LobbyManager.s_Singleton.ReturnToLoby());
+				{
+					LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
                 }
             }
             RpcUpdateHudScore(score);

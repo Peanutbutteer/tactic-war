@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 namespace Prototype.NetworkLobby
 {
 	public class MessageUI : MonoBehaviour
@@ -16,6 +17,9 @@ namespace Prototype.NetworkLobby
 			if (lobbyManager != null)
 			{
 				lobbyManager.clientDisconnected += OnDisconnect;
+				lobbyManager.matchDropped += OnDrop;
+				lobbyManager.clientError += OnError;
+				lobbyManager.serverError += OnError;
 			}
 		}
 
@@ -24,6 +28,10 @@ namespace Prototype.NetworkLobby
 			if (lobbyManager != null)
 			{
 				lobbyManager.clientDisconnected -= OnDisconnect;
+				lobbyManager.matchDropped -= OnDrop;
+				lobbyManager.clientError -= OnError;
+				lobbyManager.serverError -= OnError;
+
 			}
 		}
 
@@ -36,19 +44,36 @@ namespace Prototype.NetworkLobby
 		{
 			if (lobbyManager != null)
 			{
+				settingsPanel.close();
 				lobbyManager.DisconnectAndReturnToMenu();
 			}
 		}
 
-		protected virtual void OnDisconnect(UnityEngine.Networking.NetworkConnection conn)
+		private void ShowErrorPanel()
 		{
 			if (lobbyManager != null)
 			{
-				errorPanel.SetupTimer(2f, lobbyManager.DisconnectAndReturnToMenu);
-				errorPanel.Show();
-				Debug.Log("errorPanel");
+				ErrorModal.s_Instance.SetupTimer(5f,null);
+				ErrorModal.s_Instance.Show();
+				LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
 			}
 		}
+
+		private void OnDrop()
+		{
+			ShowErrorPanel();
+		}
+
+		private void OnError(NetworkConnection connection, int errorCode)
+		{
+			ShowErrorPanel();
+		}
+
+		protected virtual void OnDisconnect(UnityEngine.Networking.NetworkConnection conn)
+		{
+			ShowErrorPanel();
+		}
+
 	}
 
 }
