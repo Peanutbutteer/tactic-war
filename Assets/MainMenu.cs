@@ -11,6 +11,7 @@ namespace Prototype.NetworkLobby
 		public RectTransform lobbyServerList;
 		public RectTransform createRoomPanel;
 		public RectTransform aboutPanel;
+		public RectTransform profilePanel;
 
 		public void OnClickOpenServerList()
    		{
@@ -31,6 +32,11 @@ namespace Prototype.NetworkLobby
 		public void OnClickQuitGame()
 		{
 			Application.Quit();
+		}
+
+		public void OnClickProfile()
+		{
+			lobbyManager.ChangeTo(profilePanel);
 		}
 	}
 

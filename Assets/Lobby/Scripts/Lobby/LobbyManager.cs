@@ -86,7 +86,6 @@ namespace Prototype.NetworkLobby
 		public RectTransform createRoomPanel;
 
 		public LobbyInfoPanel infoPanel;
-		public LobbyCountdownPanel countdownPanel;
 
 		protected RectTransform currentPanel;
 
@@ -109,7 +108,6 @@ namespace Prototype.NetworkLobby
 			{
 				modal.FadeOut();
 			}
-			s_Singleton = this;
 			_lobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
 			currentPanel = mainMenuPanel;
 

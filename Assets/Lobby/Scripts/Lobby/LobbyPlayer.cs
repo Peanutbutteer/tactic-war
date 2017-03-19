@@ -134,7 +134,10 @@ namespace Prototype.NetworkLobby
 			nameInput.interactable = true;
 			remoteIcone.gameObject.SetActive(false);
 			localIcone.gameObject.SetActive(true);
-
+			if (DataManager.s_Singleton != null)
+			{
+				playerName = DataManager.s_Singleton.playerName;
+			}
 			CheckRemoveButton();
 
 			if (playerColor == Color.white)
