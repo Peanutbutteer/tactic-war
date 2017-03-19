@@ -264,13 +264,13 @@ namespace Prototype.NetworkLobby
 		[ClientRpc]
 		public void RpcUpdateCountdown()
 		{
-			LoadingModal loading = LoadingModal.s_Instance;
+			//LoadingModal loading = LoadingModal.s_Instance;
 
-			if (loading != null)
-			{
-				//loading.FadeIn();
-				loading.FadeOut();
-			}
+			//if (loading != null)
+			//{
+			//	//loading.FadeIn();
+			//	loading.FadeOut();
+			//}
 
 		}
 

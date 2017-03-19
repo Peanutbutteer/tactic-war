@@ -40,7 +40,6 @@ namespace Prototype.NetworkLobby
 				"", "", "", 0, 0,
 				lobbyManager.OnMatchCreate);
 
-			// for new version
 			LobbyManager.s_Singleton.ShowConnectingModal(false);
 			LobbyManager.s_Singleton.state = GameState.Connecting;
 

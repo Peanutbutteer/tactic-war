@@ -129,6 +129,11 @@ namespace Prototype.NetworkLobby
 			}
 		}
 
+		public override void OnLobbyClientSceneChanged(NetworkConnection conn)
+		{
+			HideAllPanel();
+		}
+
 		protected virtual void Awake()
 		{
 			if (s_Singleton != null)
@@ -157,14 +162,12 @@ namespace Prototype.NetworkLobby
 				{
 					if (state != GameState.Inactive)
 					{
-					Debug.Log("ServerChangeScene");
 						ServerChangeScene(lobbyScene);
 					}
 					else
 					{
 						ShowDefaultPanel();
 					}
-					Debug.Log("ShowDefaultPanel");
 				}
 				else
 				{
@@ -174,10 +177,10 @@ namespace Prototype.NetworkLobby
 						modal.FadeOut();
 					}
 				}
-
 				m_SceneChangeMode = SceneChangeMode.None;
 			}
 		}
+
 
 		public void ShowDefaultPanel()
 		{
@@ -187,6 +190,11 @@ namespace Prototype.NetworkLobby
 		public void ShowLobbyPanel()
 		{
 			ChangeTo(lobbyPanel);
+		}
+
+		public void HideAllPanel()
+		{
+			ChangeTo(null);
 		}
 
 		public void ShowInfoPopup(string info)
@@ -205,30 +213,20 @@ namespace Prototype.NetworkLobby
 			}
 		}
 
+		public void ShowInfoPopup(string info, string des, UnityEngine.Events.UnityAction callback)
+		{
+			if (infoPanel != null)
+			{
+				infoPanel.Display(info, des, callback);
+			}
+		}
+
 		public void HideInfoPopup()
 		{
 			if (infoPanel != null)
 			{
 				infoPanel.gameObject.SetActive(false);
 			}
-		}
-
-		public override void OnLobbyClientSceneChanged(NetworkConnection conn)
-		{
-			if (SceneManager.GetSceneAt(0).name == lobbyScene)
-			{
-				ChangeTo(mainMenuPanel);
-			}
-			else
-			{
-				ChangeTo(null);
-			}
-		}
-
-		public override void OnServerSceneChanged(string sceneName)
-		{
-			base.OnServerSceneChanged(sceneName);
-			m_SceneChangeMode = SceneChangeMode.Game;
 		}
 
 		public void ChangeTo(RectTransform newPanel)
@@ -266,24 +264,10 @@ namespace Prototype.NetworkLobby
 			});
 		}
 
-
-
 		public void KickedMessageHandler(NetworkMessage netMsg)
 		{
 			ShowInfoPopup("Kicked by Server", "Close");
 			netMsg.conn.Disconnect();
-		}
-
-		//===================
-
-		public override void OnStartHost()
-		{
-			base.OnStartHost();
-		}
-
-		public override void OnStopHost()
-		{
-			base.OnStopHost();
 		}
 
 		public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
@@ -294,8 +278,6 @@ namespace Prototype.NetworkLobby
 			if (success)
 			{
 				state = GameState.InLobby;
-				//HideInfoPopup();
-				//ShowLobbyPanel();
 			}
 			else
 			{
@@ -304,25 +286,27 @@ namespace Prototype.NetworkLobby
 			}
 		}
 
-		//	public override void OnMatchJoined(bool success, string extendedInfo, MatchInfo matchInfo)
-		//{
-		//	base.OnMatchJoined(success, extendedInfo, matchInfo);
-		//	Debug.Log("OnMatchJoined");
+		public override void OnMatchJoined(bool success, string extendedInfo, MatchInfo matchInfo)
+		{
+			base.OnMatchJoined(success, extendedInfo, matchInfo);
+			Debug.Log("OnMatchJoined");
 
-		//	if (success)
-		//	{
-		//		HideInfoPopup();
-		//		ShowInfoPopup("Entering lobby...");
-		//		state = GameState.InLobby;
-		//		HideInfoPopup();
-		//		ChangeTo(lobbyPanel);
-		//	}
-		//	else
-		//	{
-		//		ShowInfoPopup("Failed to join game.");
-		//		state = GameState.Pregame;
-		//	}
-		//}
+			if (success)
+			{
+				HideInfoPopup();
+				ShowInfoPopup("Entering lobby...", "Cancel", () =>
+				{
+					Disconnect();
+					ShowDefaultPanel();
+				});
+				state = GameState.InLobby;
+			}
+			else
+			{
+				ShowInfoPopup("Failed to join game.");
+				state = GameState.Pregame;
+			}
+		}
 
 		public override void OnDestroyMatch(bool success, string extendedInfo)
 		{
@@ -426,6 +410,7 @@ namespace Prototype.NetworkLobby
 					}
 				}
 				ServerChangeScene(playScene);
+				m_SceneChangeMode = SceneChangeMode.Game;
 				state = GameState.InGame;
 			}
 		}
@@ -481,7 +466,7 @@ namespace Prototype.NetworkLobby
 
 		public override void OnServerError(NetworkConnection conn, int errorCode)
 		{
-			base.OnServerError(conn, errorCode);
+			base.OnClientDisconnect(conn);
 
 			if (serverError != null)
 			{
@@ -500,6 +485,7 @@ namespace Prototype.NetworkLobby
 			s_ReturnPage = returnPage;
 
 			m_SceneChangeMode = SceneChangeMode.Menu;
+			Debug.Log(m_SceneChangeMode);
 
 			if (s_IsServer && state == GameState.InGame)
 			{

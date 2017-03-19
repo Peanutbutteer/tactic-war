@@ -1,10 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
-
-public class ErrorModal : MonoBehaviour {
-	protected float m_Timer;
+using UnityEngine.Networking;
+namespace Prototype.NetworkLobby
+{
+	public class ErrorModal : MonoBehaviour
+	{
+		protected float m_Timer;
 
 		private static ErrorModal s_instance;
 
@@ -16,16 +17,18 @@ public class ErrorModal : MonoBehaviour {
 			}
 		}
 
-		public void CloseModal() {
+		public void CloseModal()
+		{
 			gameObject.SetActive(false);
 		}
 
-		public void Show() {
+		public void Show()
+		{
 			gameObject.SetActive(true);
 		}
 
 		protected Action m_Callback;
-	
+
 		protected bool m_IsTiming = true;
 
 		//Closes self automatically
@@ -56,8 +59,9 @@ public class ErrorModal : MonoBehaviour {
 		//Setup how the modal behaves
 		public void SetupTimer(float timer, Action callback)
 		{
-			this.m_Timer = timer;
-			this.m_Callback = callback;
+			m_Timer = timer;
+			m_Callback = callback;
 			m_IsTiming = true;
 		}
+	}
 }
