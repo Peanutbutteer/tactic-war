@@ -89,6 +89,7 @@ namespace Prototype.NetworkLobby
 				SetupOtherPlayer();
 			}
 
+
 			//setup the player data on UI. The value are SyncVar so the player
 			//will be created with the right value currently on server
 			OnMyName(playerName);
@@ -118,6 +119,7 @@ namespace Prototype.NetworkLobby
 
 		void SetupOtherPlayer()
 		{
+
 			nameInput.interactable = false;
 			removePlayerButton.interactable = NetworkServer.active;
 
@@ -134,11 +136,12 @@ namespace Prototype.NetworkLobby
 			nameInput.interactable = true;
 			remoteIcone.gameObject.SetActive(false);
 			localIcone.gameObject.SetActive(true);
+			CheckRemoveButton();
+
 			if (DataManager.s_Singleton != null)
 			{
-				playerName = DataManager.s_Singleton.playerName;
+				CmdNameChanged(DataManager.s_Singleton.playerName);
 			}
-			CheckRemoveButton();
 
 			if (playerColor == Color.white)
 				CmdColorChange();
@@ -147,10 +150,6 @@ namespace Prototype.NetworkLobby
 
 			readyButton.transform.GetChild(0).GetComponent<Text>().text = "JOIN";
 			readyButton.interactable = true;
-
-			//have to use child count of player prefab already setup as "this.slot" is not set yet
-			if (playerName == "")
-				CmdNameChanged("Player" + (LobbyPlayerList._instance.playerListContentTransform.childCount - 1));
 
 			//we switch from simple name display to name input
 			colorButton.interactable = true;
