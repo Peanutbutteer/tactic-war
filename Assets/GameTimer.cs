@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
-public class GameTimer : MonoBehaviour
+using UnityEngine.Networking;
+public class GameTimer : NetworkBehaviour
 {
 	public int time;
 	[SerializeField]
@@ -19,13 +20,22 @@ public class GameTimer : MonoBehaviour
 	// Update is called once per frame
 	void LateUpdate()
 	{
+		if (isServer && timer > 0)
+		{
+			timer -= Time.deltaTime;
+			int minutes = (int)timer / 60;
+			int secound = (int)(timer % 60);
+			RpcUpdateTime(minutes, secound);
+		}
+	}
+
+	[ClientRpc]
+	void RpcUpdateTime(int minutes, int secound)
+	{
 		if (timer <= 0f)
 		{
 			Finish();
 		}
-		timer -= Time.unscaledDeltaTime;
-		int minutes = (int)timer / 60;
-		int secound = (int)(timer % 60);
 		timeText.text = String.Format("{0:00}:{1:00}", minutes, secound);
 	}
 
