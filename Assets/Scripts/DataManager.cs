@@ -8,7 +8,7 @@ public class DataManager : MonoBehaviour
 {
 	public static DataManager s_Singleton;
 
-	PlayerData playerData;
+	PlayerData playerData = new PlayerData();
 
 	// Use this for initialization
 	void Start()
@@ -50,10 +50,11 @@ public class DataManager : MonoBehaviour
 
 	public void Load()
 	{
-		if (File.Exists(GetFilePath())) {
+		if (File.Exists(GetFilePath()))
+		{
 			BinaryFormatter bf = new BinaryFormatter();
-			FileStream file = File.Open(GetFilePath(),FileMode.Open);
-			playerData = (PlayerData) bf.Deserialize(file);
+			FileStream file = File.Open(GetFilePath(), FileMode.Open);
+			playerData = (PlayerData)bf.Deserialize(file);
 			file.Close();
 		}
 	}
