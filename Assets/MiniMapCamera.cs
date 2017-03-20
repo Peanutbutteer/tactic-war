@@ -1,21 +1,20 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Networking;
-public class CameraController : MonoBehaviour
+public class MiniMapCamera : MonoBehaviour
 {
-
-	private Vector3 offset = new Vector3(1.5f, 40f, -20f);
 	private GameObject player;
+	private Vector3 offset = new Vector3(0f, 100f, 0f);
 	// Use this for initialization
 	void Start()
 	{
 
-
 	}
 
+	// Update is called once per frame
 	void Update()
 	{
-
 		if (player != null)
 		{
 			return;
@@ -30,7 +29,6 @@ public class CameraController : MonoBehaviour
 		}
 	}
 
-	// Update is called once per frame
 	void LateUpdate()
 	{
 		if (player != null)
