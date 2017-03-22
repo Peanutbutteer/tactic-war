@@ -30,13 +30,15 @@ public class ButtonOneController : NetworkBehaviour
         {
             return;
         }
-        if (CnInputManager.GetButtonUp("BlockButton"))
+        // Skill slot 0
+        if (skill[0] != null)
         {
-            if(skill!=null) {
-            	skill[0].ButtonUp();
+            if (CnInputManager.GetButtonUp("BlockButton"))
+            {
+                skill[0].ButtonUp();
             }
         }
-
+        // Skill slot 1
         if (skill[1] != null)
         {
             if (CnInputManager.GetButton("FireballButton"))
