@@ -6,14 +6,21 @@ using Prototype.NetworkLobby;
 
 public class PlayerHealth : NetworkBehaviour
 {
-	public const int maxHealth = 30;
+	public const int maxHealth = 10;
 
 	[SyncVar(hook = "OnChangeHealth")]
 	public int currentHealth = maxHealth;
 
 	public RectTransform healthBar;
 
-	public void TakeDamage(int amount)
+    Animator anim;
+
+    void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
+
+    public void TakeDamage(int amount)
 	{
 		
 		if (!isServer)
@@ -22,11 +29,12 @@ public class PlayerHealth : NetworkBehaviour
 		currentHealth -= amount;
 		if (currentHealth <= 0)
 		{
-			currentHealth = maxHealth;
+            currentHealth = maxHealth;
 			int id = gameObject.GetComponent<PlayerMageController>().playerId;
 			LobbyPlayer player = LobbyPlayerList._instance._players[id];
 			player.IncrementScore();
-			int[] score = new int[LobbyPlayerList._instance._players.Count];
+            RpcRespawn();
+            int[] score = new int[LobbyPlayerList._instance._players.Count];
 			for (int i = 0; i < score.Length; ++i)
 			{
 				LobbyPlayer localPlayer = LobbyPlayerList._instance._players[i] as LobbyPlayer;
@@ -41,7 +49,15 @@ public class PlayerHealth : NetworkBehaviour
 		}
 	}
 
-	IEnumerator EndGame()
+    IEnumerator PlayerDeath()
+    {
+        anim.SetBool("Death", true);
+        yield return new WaitForSeconds(4f);
+        anim.SetBool("Death", false);
+        transform.position = new Vector3(70, 0, 60);
+    }
+
+    IEnumerator EndGame()
 	{
 		yield return new WaitForSeconds(5f);
 		LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
@@ -106,7 +122,7 @@ public class PlayerHealth : NetworkBehaviour
 	{
 		if (isLocalPlayer)
 		{
-			transform.position = new Vector3(70, 0, 60);
+            StartCoroutine(PlayerDeath());
 		}
 	}
 }

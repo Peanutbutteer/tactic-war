@@ -52,7 +52,8 @@ public class PlayerMageController : NetworkBehaviour
 		float horizontal = CnInputManager.GetAxis("Horizontal");
 		float vertical = CnInputManager.GetAxis("Vertical");
 
-		if (anim.GetBool("Attack") == false && anim.GetBool("Blink") == false && anim.GetBool("AttackStaff") == false)
+		if (anim.GetBool("Attack") == false && anim.GetBool("Blink") == false && anim.GetBool("AttackStaff") == false
+            && anim.GetBool("Death") == false )
 		{
 			if (CnInputManager.GetButton("WalkButton"))
 			{

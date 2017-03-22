@@ -40,12 +40,19 @@ public class HomingSkill : NetworkBehaviour
         homingMissile.velocity = transform.forward * missileVelocity;
 
     }
-    void OnParticleCollision(GameObject other)
-    {
-        Destroy(this.gameObject);
-    }
+
     void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("Collision");
         Destroy(this.gameObject);
+        if (!isServer)
+            return;
+        var hit = collision.gameObject;
+        var playerHealth = hit.GetComponent<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(10);
+        }
+
     }
 }
