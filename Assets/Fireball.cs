@@ -17,7 +17,6 @@ public class Fireball : NetworkBehaviour {
 
     void OnParticleCollision(GameObject other)
     {
-        Debug.Log("Collision");
         if (!isServer)
             return;
         var hit = other.gameObject;
