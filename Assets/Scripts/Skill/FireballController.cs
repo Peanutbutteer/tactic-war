@@ -17,6 +17,7 @@ public class FireballController : NetworkBehaviour
     private float nextFire;
     private float playerHorizontal;
     private float playerVertical;
+    new Rigidbody rigidbody;
     Animator anim;
     Vector3 movement;
     Text txtCooldown;

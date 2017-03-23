@@ -8,12 +8,10 @@ public class BlockController : Skill
 {
     public GameObject blockPrefab;
 	public GameObject cooldownPrefab;
-	private GameObject cooldownSkill;
     // Use this for initialization
     public override void Start () {
         base.Start();
-		GameObject canvas = GameObject.FindGameObjectWithTag ("Canvas");
-		cooldownSkill = Instantiate (cooldownPrefab, canvas.transform, false);
+        InstantiateCooldownSkill(cooldownPrefab);
     }
 
 	[Command]

@@ -48,6 +48,31 @@ public class ButtonOneController : NetworkBehaviour
             if (CnInputManager.GetButtonUp("FireballButton"))
             {
                 skill[1].ButtonUp();
+            }
+        }
+        // Skill slot 2
+        if (skill[2] != null)
+        {
+            if (CnInputManager.GetButton("BlinkButton"))
+            {
+                skill[2].ButtonDirection(CnInputManager.GetAxis("BlinkVertical"), CnInputManager.GetAxis("BlinkHorizontal"));
+            }
+            if (CnInputManager.GetButtonUp("BlinkButton"))
+            {
+                skill[2].ButtonUp();
+
+            }
+        }
+        // Skill slot 3
+        if (skill[3] != null)
+        {
+            if (CnInputManager.GetButton("HomingButton"))
+            {
+                skill[3].ButtonDirection(CnInputManager.GetAxis("HomingVertical"), CnInputManager.GetAxis("HomingHorizontal"));
+            }
+            if (CnInputManager.GetButtonUp("HomingButton"))
+            {
+                skill[3].ButtonUp();
 
             }
         }
