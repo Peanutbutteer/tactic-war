@@ -13,48 +13,52 @@ public class BlinkControllerT : Skill
     public int skillRadius = 15;
     
     private GameObject BlinkPoint;
-    private new Projector renderer;
+    private Projector rendBlinkPoint;
     private GameObject blinkArea;
-    private Vector3 positionBlink;
+    private Vector3 positionSkill;
 
     public override void Start()
     {
         base.Start();
         InstantiateCooldownSkill(cooldownPrefab);
-        BlinkPoint = FindObjectInPlayer("BlinkPoint");
-        blinkArea = FindObjectInPlayer("BlinkArea");
-        renderer = BlinkPoint.GetComponent<Projector>();
-        renderer.enabled = false;
+        BlinkPoint = FindObjectInPlayer("SkillPoint");
+        blinkArea = FindObjectInPlayer("SkillArea");
+
+        rendBlinkPoint = BlinkPoint.GetComponent<Projector>();
+        rendBlinkPoint.orthographicSize = 2;
+        rendBlinkPoint.enabled = false;
     }
 
     public override void ButtonDirection(float vertical, float horizontal)
     {
         base.ButtonDirection(vertical, horizontal);
         blinkArea.SetActive(true);
-        renderer.enabled = true;
-        positionBlink = new Vector3(horizontal * skillRadius, 1000f * 0.03f, vertical * skillRadius);
-        BlinkPoint.transform.position = player.transform.position + positionBlink;
+        rendBlinkPoint.enabled = true;
+        positionSkill = new Vector3(horizontal * skillRadius, 1000f * 0.03f, vertical * skillRadius);
+        BlinkPoint.transform.position = player.transform.position + positionSkill;
     }
 
     public override void ButtonUp()
     {
         base.ButtonUp();
         cooldownSkill.SetActive(true);
-        StartCoroutine(Blink());
+        StartCoroutine(CastBlink());
     }
 
-    IEnumerator Blink()
+    IEnumerator CastBlink()
     {
-        renderer.enabled = false;
+        rendBlinkPoint.enabled = false;
+        blinkArea.SetActive(false);
         anim.SetBool("Blink", true);
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("Blink", false);
+
         CmdSpawnEffectBlink(player);
-        blinkArea.SetActive(false);
+        
         Vector3 position = BlinkPoint.transform.position;
         position.y = 0;
         player.transform.position = position;
-        positionBlink = new Vector3(0, 0, 0);
+        positionSkill = new Vector3(0, 0, 0);
 
     }
     [Command]

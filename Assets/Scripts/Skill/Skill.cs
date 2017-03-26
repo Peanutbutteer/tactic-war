@@ -26,7 +26,6 @@ public class Skill : NetworkBehaviour, SkillBehavior
 
     public virtual void ButtonDown(){}
     public virtual void ButtonUp(){}
-    public virtual void ButtonHold(){}
     public virtual void ButtonDirection(float vertical, float horizontal)
     {
         if (horizontal != 0 || vertical != 0)

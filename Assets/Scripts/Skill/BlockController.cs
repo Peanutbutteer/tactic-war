@@ -30,11 +30,6 @@ public class BlockController : Skill
          block.transform.localPosition = localPos;
          block.transform.localRotation = localRot;
      }
-
-    public override void ButtonHold()
-    {
-        base.ButtonHold();
-    }
     public override void ButtonDown() {
     }
 

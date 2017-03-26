@@ -25,8 +25,6 @@ public class Fireball : NetworkBehaviour {
         {
             playerHealth.TakeDamage(10);
         }
-
-        //Destroy(gameObject);
+        
     }
-
-    }
+}

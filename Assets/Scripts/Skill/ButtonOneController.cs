@@ -31,35 +31,39 @@ public class ButtonOneController : NetworkBehaviour
             return;
         }
         // Skill slot 0
-        if (skill[0] != null)
+        if (skill[5] != null)
         {
+            if (CnInputManager.GetButtonDown("BlockButton"))
+            {
+                skill[5].ButtonDown();
+            }
             if (CnInputManager.GetButtonUp("BlockButton"))
             {
-                skill[0].ButtonUp();
+                skill[5].ButtonUp();
             }
         }
         // Skill slot 1
-        if (skill[1] != null)
+        if (skill[6] != null)
         {
             if (CnInputManager.GetButton("FireballButton"))
             {
-                skill[1].ButtonDirection(CnInputManager.GetAxis("FireballVertical"), CnInputManager.GetAxis("FireballHorizontal"));
+                skill[6].ButtonDirection(CnInputManager.GetAxis("FireballVertical"), CnInputManager.GetAxis("FireballHorizontal"));
             }
             if (CnInputManager.GetButtonUp("FireballButton"))
             {
-                skill[1].ButtonUp();
+                skill[6].ButtonUp();
             }
         }
         // Skill slot 2
-        if (skill[2] != null)
+        if (skill[7] != null)
         {
             if (CnInputManager.GetButton("BlinkButton"))
             {
-                skill[2].ButtonDirection(CnInputManager.GetAxis("BlinkVertical"), CnInputManager.GetAxis("BlinkHorizontal"));
+                skill[7].ButtonDirection(CnInputManager.GetAxis("BlinkVertical"), CnInputManager.GetAxis("BlinkHorizontal"));
             }
             if (CnInputManager.GetButtonUp("BlinkButton"))
             {
-                skill[2].ButtonUp();
+                skill[7].ButtonUp();
 
             }
         }

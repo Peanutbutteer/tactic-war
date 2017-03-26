@@ -62,8 +62,6 @@ public class PlayerMageController : NetworkBehaviour
 			Move(horizontal, vertical);
 			Animating(horizontal, vertical);
 		}
-
-
 	}
 
 	void Move(float x, float y)

@@ -40,7 +40,6 @@ public class ThreeFireballController : Skill
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("Attack", false);
         //CmdSpawnSkill("SkillSpawn", fireballPrefab, player);
-        
     }
     [Command]
     void CmdSpawnFireballSkill(GameObject player)
