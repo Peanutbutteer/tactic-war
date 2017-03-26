@@ -10,12 +10,6 @@ public class DataManager : MonoBehaviour
 
 	PlayerData playerData = new PlayerData();
 
-	// Use this for initialization
-	void Start()
-	{
-
-	}
-
 	void Awake()
 	{
 		if (s_Singleton == null)
@@ -30,10 +24,35 @@ public class DataManager : MonoBehaviour
 		}
 	}
 
-	public string playerName {
+	public string playerName
+	{
 		get { return playerData.playerName; }
 		set { playerData.playerName = value; }
 	}
+
+	public int slotOne
+	{
+		get { return playerData.skilSlotOne; }
+		set { playerData.skilSlotOne = value; }
+	}
+
+	public int slotTwo
+	{
+		get { return playerData.skilSlotTwo; }
+		set { playerData.skilSlotTwo = value; }
+	}
+	public int slotThree
+	{
+		get { return playerData.skilSlotThree; }
+		set { playerData.skilSlotThree = value; }
+	}
+
+	public int slotFour
+	{
+		get { return playerData.skilSlotFour; }
+		set { playerData.skilSlotFour = value; }
+	}
+
 
 	public string GetFilePath()
 	{
@@ -44,7 +63,7 @@ public class DataManager : MonoBehaviour
 	{
 		BinaryFormatter bf = new BinaryFormatter();
 		FileStream file = File.Create(GetFilePath());
-		bf.Serialize(file,playerData);
+		bf.Serialize(file, playerData);
 		file.Close();
 	}
 
@@ -65,4 +84,8 @@ public class DataManager : MonoBehaviour
 public class PlayerData
 {
 	public string playerName = "player";
+	public int skilSlotOne = 0;
+	public int skilSlotTwo = 1;
+	public int skilSlotThree = 2;
+	public int skilSlotFour = 3;
 }

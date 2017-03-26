@@ -7,11 +7,9 @@ using UnityEngine.Networking;
 public class BlockController : Skill
 {
     public GameObject blockPrefab;
-	public GameObject cooldownPrefab;
     // Use this for initialization
     public override void Start () {
         base.Start();
-        InstantiateCooldownSkill(cooldownPrefab);
     }
 
 	[Command]

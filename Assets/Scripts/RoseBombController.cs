@@ -10,7 +10,6 @@ public class RoseBombController : Skill
 
     public GameObject rosefirePrefab;
     public GameObject roseboomPrefab;
-    public GameObject cooldownPrefab;
     public int skillRadius = 20;
 
     private GameObject rosebombPoint;
@@ -22,7 +21,6 @@ public class RoseBombController : Skill
     public override void Start()
     {
         base.Start();
-        InstantiateCooldownSkill(cooldownPrefab);
         rosebombPoint = FindObjectInPlayer("SkillPoint");
         rosebombArea = FindObjectInPlayer("SkillArea");
 

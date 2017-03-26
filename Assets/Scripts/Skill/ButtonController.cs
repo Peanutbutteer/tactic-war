@@ -10,9 +10,16 @@ public class ButtonController : NetworkBehaviour
 	public string buttonName;
 	public int indexSelectedSkill;
 	public bool isPressButton = false;
+	public GameObject cooldownPrefab;
+    private GameObject canvas;
+	public int buttonXPos;
+	public int buttonYPos;
+
 	void Start()
 	{
+        canvas = GameObject.FindGameObjectWithTag("Canvas");
 		skill = SkillsLibrary.s_Instance.getSkill(indexSelectedSkill);
+		InstantiateCooldownSkill();
 	}
 
 	// Update is called once per frame
@@ -34,5 +41,11 @@ public class ButtonController : NetworkBehaviour
 		{
 			skill.ButtonDirection(CnInputManager.GetAxis(buttonName + "Vertical"), CnInputManager.GetAxis(buttonName + "Horizontal"));
 		}
+	}
+
+	protected void InstantiateCooldownSkill()
+	{
+		cooldownPrefab.transform.localPosition = new Vector3(buttonXPos, buttonYPos);
+		skill.SetCooldown(Instantiate(cooldownPrefab, canvas.transform, false));
 	}
 }

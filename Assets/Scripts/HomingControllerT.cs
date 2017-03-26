@@ -8,12 +8,9 @@ using UnityEngine.Networking;
 public class HomingControllerT : Skill
 {
     public GameObject homingPrefab;
-    public GameObject cooldownPrefab;
-
     public override void Start()
     {
         base.Start();
-        InstantiateCooldownSkill(cooldownPrefab);
     }
 
     public override void ButtonDirection(float vertical, float horizontal)

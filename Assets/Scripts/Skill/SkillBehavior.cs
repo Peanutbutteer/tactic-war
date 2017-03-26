@@ -5,5 +5,6 @@ public interface SkillBehavior {
     void ButtonUp();
     void ButtonDirection(float x, float y);
     void Start();
+	void SetCooldown(GameObject gameObject);
 	NetworkIdentity GetNetworkIdentity();
 }

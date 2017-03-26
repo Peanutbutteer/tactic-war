@@ -9,7 +9,6 @@ public class BlinkControllerT : Skill
 {
     
     public GameObject effectBlink;
-    public GameObject cooldownPrefab;
     public int skillRadius = 15;
     
     private GameObject BlinkPoint;
@@ -20,7 +19,6 @@ public class BlinkControllerT : Skill
     public override void Start()
     {
         base.Start();
-        InstantiateCooldownSkill(cooldownPrefab);
         BlinkPoint = FindObjectInPlayer("SkillPoint");
         blinkArea = FindObjectInPlayer("SkillArea");
 

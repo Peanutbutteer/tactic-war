@@ -8,12 +8,10 @@ using UnityEngine.Networking;
 public class FireballControllerT : Skill
 {
     public GameObject fireballPrefab;
-    public GameObject cooldownPrefab;
 
     public override void Start()
     {
         base.Start();
-        InstantiateCooldownSkill(cooldownPrefab);
     }
 
     public override void ButtonDirection(float vertical, float horizontal)

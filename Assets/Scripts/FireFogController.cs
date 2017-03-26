@@ -6,7 +6,6 @@ using UnityEngine.Networking;
 public class FireFogController : Skill {
 
     public GameObject firefogPrefab;
-    public GameObject cooldownPrefab;
     public int skillRadius = 15;
 
     private GameObject firefogPoint;
@@ -18,7 +17,6 @@ public class FireFogController : Skill {
     public override void Start()
     {
         base.Start();
-        InstantiateCooldownSkill(cooldownPrefab);
         firefogPoint = FindObjectInPlayer("SkillPoint");
         firefogArea = FindObjectInPlayer("SkillArea");
 

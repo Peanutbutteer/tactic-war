@@ -6,14 +6,12 @@ using UnityEngine.Networking;
 public class MoveSpeedController : Skill
 {
     public GameObject speedUpPrefab;
-    public GameObject cooldownPrefab;
     
     private PlayerMageController playerMage;
     // Use this for initialization
     public override void Start()
     {
         base.Start();
-        InstantiateCooldownSkill(cooldownPrefab);
         playerMage = player.GetComponent<PlayerMageController>();
     }
 
