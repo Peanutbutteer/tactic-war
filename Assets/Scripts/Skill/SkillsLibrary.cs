@@ -11,8 +11,14 @@ public class SkillsLibrary : MonoBehaviour {
 		private set;
 	}
 
-	public SkillBehavior[] getSkill(){
+	public SkillBehavior[] getSkills(){
 		return skills;
+	}
+
+
+	public SkillBehavior getSkill(int index)
+	{
+		return skills[index];
 	}
 
 	protected virtual void Awake()
