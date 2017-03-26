@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 public class Skill : NetworkBehaviour, SkillBehavior
 {
 	public string skillName;
-	public int cooldown;
+	public int cooldown = 3;
 	protected GameObject player;
 	protected GameObject cooldownSkill;
 	protected GameObject skillLine;
@@ -69,5 +69,10 @@ public class Skill : NetworkBehaviour, SkillBehavior
 	public void SetCooldown(GameObject coolDown)
 	{
 		cooldownSkill = coolDown;
+	}
+
+	public int GetCoolDownTime()
+	{
+		return cooldown;
 	}
 }

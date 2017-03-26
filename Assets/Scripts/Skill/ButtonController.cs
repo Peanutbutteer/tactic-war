@@ -46,6 +46,7 @@ public class ButtonController : NetworkBehaviour
 	protected void InstantiateCooldownSkill()
 	{
 		cooldownPrefab.transform.localPosition = new Vector3(buttonXPos, buttonYPos);
+		cooldownPrefab.GetComponent<CoolDownSkill>().coolDownTime = skill.GetCoolDownTime();
 		skill.SetCooldown(Instantiate(cooldownPrefab, canvas.transform, false));
 	}
 }
