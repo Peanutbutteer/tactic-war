@@ -8,5 +8,8 @@ public interface SkillBehavior {
 	void SetCooldown(GameObject gameObject);
 	int GetCoolDownTime();
 	Sprite GetButtonImage();
+	int GetCatagory();
+	string GetDescription();
+	string GetName();
 	NetworkIdentity GetNetworkIdentity();
 }

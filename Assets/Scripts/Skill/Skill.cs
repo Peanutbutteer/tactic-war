@@ -6,9 +6,15 @@ public class Skill : NetworkBehaviour, SkillBehavior
 {
 	public string skillName;
 	public int cooldown = 3;
+	public int catagory;
 	public Sprite buttonSourceImage;
-
-
+	public string description;
+	public int id
+	{
+		set { mId = value; }
+		get { return mId; }
+	}
+	protected int mId;
 	protected GameObject player;
 	protected GameObject cooldownSkill;
 	protected GameObject skillLine;
@@ -82,5 +88,20 @@ public class Skill : NetworkBehaviour, SkillBehavior
 	public Sprite GetButtonImage()
 	{
 		return buttonSourceImage;
+	}
+
+	public int GetCatagory()
+	{
+		return catagory;
+	}
+
+	public string GetDescription()
+	{
+		return description;
+	}
+
+	public string GetName()
+	{
+		return skillName;
 	}
 }
