@@ -7,7 +7,7 @@ using System.IO;
 public class DataManager : MonoBehaviour
 {
 	public static DataManager s_Singleton;
-
+	[SerializeField]
 	PlayerData playerData = new PlayerData();
 
 	void Awake()
