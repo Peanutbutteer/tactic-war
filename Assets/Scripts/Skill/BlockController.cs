@@ -4,71 +4,38 @@ using UnityEngine;
 using CnControls;
 using UnityEngine.UI;
 using UnityEngine.Networking;
-public class BlockController : NetworkBehaviour
+public class BlockController : Skill
 {
-
-
-    public GameObject block;
-	public GameObject cooldownPrefab;
-    private Animator anim;
-	private GameObject cooldownSkill;
-
-    [SyncVar(hook = "OnShieldLevelChanged")]
-    //The current shield level of the tank.
-    public bool m_ShieldLevel;
-
+    public GameObject blockPrefab;
     // Use this for initialization
-    void Start () {
-		GameObject canvas = GameObject.FindGameObjectWithTag ("Canvas");
-		cooldownSkill = Instantiate (cooldownPrefab, canvas.transform, false);
-        anim = GetComponent<Animator>();
-        block.SetActive(false);
+    public override void Start () {
+        base.Start();
+    }
+
+	[Command]
+	public void CmdSpawnBlock(GameObject player)
+	{
+		GameObject block = Instantiate(blockPrefab, blockPrefab.transform.position, blockPrefab.transform.rotation);
+		block.transform.parent = player.transform;
+		NetworkServer.Spawn(block);
+        Destroy(block, 1.0f);
+        RpcSyncBlock(block.transform.position,block.transform.rotation,block,player);
 	}
-
-	void FixedUpdate() {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-
-        if (!isLocalPlayer)
-        {
-            return;
-        }
-        if (CnInputManager.GetButtonUp("BlockButton"))
-        {
-			cooldownSkill.SetActive (true);
-            CmdSpawnBlockSkill();
-            StartCoroutine(DisableBlock());
-        }
-
-    }
-   
-    void OnShieldLevelChanged(bool active)
-    {
-        block.SetActive(active);
+    [ClientRpc]
+     public void RpcSyncBlock(Vector3 localPos, Quaternion localRot,GameObject block, GameObject parent)
+     {
+         block.transform.parent = parent.transform;
+         block.transform.localPosition = localPos;
+         block.transform.localRotation = localRot;
+     }
+    public override void ButtonDown() {
     }
 
-    IEnumerator DisableBlock()
-    {
-        yield return new WaitForSeconds(1f);
-        CmdDisableSpawnBlockSkill();
+    public override void ButtonUp() {
+        cooldownSkill.SetActive(true);
+        CmdSpawnBlock(player);
     }
 
-    [Command]
-    void CmdSpawnBlockSkill()
-    {
-        m_ShieldLevel = true;
+    public override void ButtonDirection(float vertical, float horizontal) {
     }
-
-    [Command]
-    void CmdDisableSpawnBlockSkill()
-    {
-        m_ShieldLevel = false;
-    }
-
-
-
-    //var myNewSmoke = Instantiate(poisonSmoke, Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
-    //myNewSmoke.transform.parent = gameObject.transform;
 }

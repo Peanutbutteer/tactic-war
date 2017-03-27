@@ -14,6 +14,7 @@ public class PlayerMageController : NetworkBehaviour
 	public GameObject mageBody;
 	public GameObject staff;
 	public GameObject miniMapPoint;
+	private int[] skillSlot = new int[4];
 	[SyncVar]
 	public Color color;
 
@@ -38,6 +39,17 @@ public class PlayerMageController : NetworkBehaviour
 	{
 		rigidbody = GetComponent<Rigidbody>();
 		anim = GetComponent<Animator>();
+		skillSlot[0] = DataManager.s_Singleton.slotOne;
+		skillSlot[1] = DataManager.s_Singleton.slotTwo;
+		skillSlot[2] = DataManager.s_Singleton.slotThree;
+		skillSlot[3] = DataManager.s_Singleton.slotFour;
+		ButtonController[] buttons = GetComponentsInChildren<ButtonController>();
+		int index = 0;
+		foreach (ButtonController button in buttons)
+		{
+			button.indexSelectedSkill = skillSlot[index];
+			index++;
+		}
 	}
 
 	// Update is called once per frame
@@ -62,8 +74,6 @@ public class PlayerMageController : NetworkBehaviour
 			Move(horizontal, vertical);
 			Animating(horizontal, vertical);
 		}
-
-
 	}
 
 	void Move(float x, float y)

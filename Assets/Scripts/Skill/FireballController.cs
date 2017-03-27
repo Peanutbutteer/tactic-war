@@ -15,6 +15,8 @@ public class FireballController : NetworkBehaviour
     private GameObject cooldownSkill;
 
     private float nextFire;
+    private float playerHorizontal;
+    private float playerVertical;
     new Rigidbody rigidbody;
     Animator anim;
     Vector3 movement;
@@ -24,17 +26,20 @@ public class FireballController : NetworkBehaviour
     {
 		GameObject canvas = GameObject.FindGameObjectWithTag ("Canvas");
 		cooldownSkill = Instantiate (coolDownPrefab, canvas.transform, false);
-        rigidbody = controller.GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
     }
 
 	void FixedUpdate () {
-		float horizontal = CnInputManager.GetAxis("FireballHorizontal");
-		float vertical = CnInputManager.GetAxis("FireballVertical");
+        float horizontal = CnInputManager.GetAxis("FireballHorizontal");
+        float vertical = CnInputManager.GetAxis("FireballVertical");
+        //horizontal = CnInputManager.GetAxis("FireballHorizontal");
+        //vertical = CnInputManager.GetAxis("FireballVertical");
         //fireball direction selector
-		if (horizontal != 0 || vertical != 0) {
-		 	rigidbody.transform.rotation = Util.Turning (horizontal, vertical);
-		}
+        if (horizontal != 0 || vertical != 0) {
+            playerHorizontal = horizontal;
+            playerVertical = vertical;
+            //rigidbody.transform.rotation = Util.Turning(horizontal, vertical);
+        }
 			
 	}
 
@@ -56,8 +61,9 @@ public class FireballController : NetworkBehaviour
 		{
             skillLine.SetActive(false);
             anim.SetBool("Attack", true);
-            transform.rotation = rigidbody.transform.rotation;
-			cooldownSkill.SetActive (true);
+            //transform.rotation = rigidbody.transform.rotation;
+            transform.rotation = Util.Turning(playerHorizontal, playerVertical);
+            cooldownSkill.SetActive (true);
             StartCoroutine(Attack());
 		}
 	}
