@@ -53,9 +53,10 @@ namespace Prototype.NetworkLobby
 		{
 			if (lobbyManager != null)
 			{
-				ErrorModal.s_Instance.SetupTimer(5f,null);
+				ErrorModal.s_Instance.SetupTimer(5f, null);
 				ErrorModal.s_Instance.Show();
-				LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
+				//LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
+				LobbyManager.s_Singleton.ServerChangeScene(LobbyManager.s_Singleton.offlineScene);
 			}
 		}
 
