@@ -25,7 +25,6 @@ public class Skill : NetworkBehaviour, SkillBehavior
 	public virtual void Start()
 	{
 		SetLocalPlayer();
-
 		anim = player.GetComponent<Animator>();
 		skillLine = FindObjectInPlayer("SkillLine");
 	}

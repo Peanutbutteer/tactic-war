@@ -39,12 +39,14 @@ public class PlayerMageController : NetworkBehaviour
 	{
 		rigidbody = GetComponent<Rigidbody>();
 		anim = GetComponent<Animator>();
-		skillSlot[0] = DataManager.s_Singleton.slotOne;
-		skillSlot[1] = DataManager.s_Singleton.slotTwo;
-		skillSlot[2] = DataManager.s_Singleton.slotThree;
-		skillSlot[3] = DataManager.s_Singleton.slotFour;
-		ButtonController[] buttons = GetComponentsInChildren<ButtonController>();
+		int[] slots = DataManager.s_Singleton.slots;
 		int index = 0;
+		for (; index < skillSlot.Length; index++)
+		{
+			skillSlot[index] = slots[index];
+		}
+		ButtonController[] buttons = GetComponentsInChildren<ButtonController>();
+		index = 0;
 		foreach (ButtonController button in buttons)
 		{
 			button.indexSelectedSkill = skillSlot[index];
@@ -65,7 +67,7 @@ public class PlayerMageController : NetworkBehaviour
 		float vertical = CnInputManager.GetAxis("Vertical");
 
 		if (anim.GetBool("Attack") == false && anim.GetBool("Blink") == false && anim.GetBool("AttackStaff") == false
-            && anim.GetBool("Death") == false )
+			&& anim.GetBool("Death") == false)
 		{
 			if (CnInputManager.GetButton("WalkButton"))
 			{

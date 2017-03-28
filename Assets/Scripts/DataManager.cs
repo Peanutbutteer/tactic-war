@@ -17,6 +17,7 @@ public class DataManager : MonoBehaviour
 			DontDestroyOnLoad(gameObject);
 			s_Singleton = this;
 			Load();
+			//Save();
 		}
 		else
 		{
@@ -30,27 +31,10 @@ public class DataManager : MonoBehaviour
 		set { playerData.playerName = value; }
 	}
 
-	public int slotOne
+	public int[] slots
 	{
-		get { return playerData.skilSlotOne; }
-		set { playerData.skilSlotOne = value; }
-	}
-
-	public int slotTwo
-	{
-		get { return playerData.skilSlotTwo; }
-		set { playerData.skilSlotTwo = value; }
-	}
-	public int slotThree
-	{
-		get { return playerData.skilSlotThree; }
-		set { playerData.skilSlotThree = value; }
-	}
-
-	public int slotFour
-	{
-		get { return playerData.skilSlotFour; }
-		set { playerData.skilSlotFour = value; }
+		get { return playerData.slots; }
+		set { playerData.slots = value; }
 	}
 
 
@@ -84,8 +68,5 @@ public class DataManager : MonoBehaviour
 public class PlayerData
 {
 	public string playerName = "player";
-	public int skilSlotOne = 0;
-	public int skilSlotTwo = 1;
-	public int skilSlotThree = 2;
-	public int skilSlotFour = 3;
+	public int[] slots = { 0, 1, 2, 3 };
 }

@@ -5,19 +5,24 @@ using UnityEngine.UI;
 
 public class ProfilePanel : MonoBehaviour
 {
+	const int SKILL_CATAGORY_ONE = 0;
+	const int SKILL_CATAGORY_TWO = 1;
+	const int SKILL_CATAGORY_THREE = 2;
+	const int SKILL_CATAGORY_FOUR = 3;
 	public Text playerName;
-	public SkillSlot slotOne;
-	public SkillSlot slotTwo;
-	public SkillSlot slotThree;
-	public SkillSlot slotFour;
 	public RectTransform rowOne;
 	public RectTransform rowTwo;
 	public Text skillName;
 	public Text skillDescription;
 	public GameObject skillSlotPrefab;
+	public int catSelectedIndex = SKILL_CATAGORY_ONE;
+	public SkillSlot[] slots;
+	public int idSelected = 0;
 	void Start()
 	{
 		Load();
+		SlotClick(0);
+		idSelected = DataManager.s_Singleton.slots[0];
 	}
 
 	public void Load()
@@ -25,30 +30,57 @@ public class ProfilePanel : MonoBehaviour
 		if (DataManager.s_Singleton != null)
 		{
 			playerName.text = DataManager.s_Singleton.playerName;
-			slotOne.skillImage = SkillsLibrary.s_Instance.getSkill(DataManager.s_Singleton.slotOne).GetButtonImage();
-			slotTwo.skillImage = SkillsLibrary.s_Instance.getSkill(DataManager.s_Singleton.slotTwo).GetButtonImage();
-			slotThree.skillImage = SkillsLibrary.s_Instance.getSkill(DataManager.s_Singleton.slotThree).GetButtonImage();
-			slotFour.skillImage = SkillsLibrary.s_Instance.getSkill(DataManager.s_Singleton.slotFour).GetButtonImage();
-			slotOne.OnSlotClick = SlotClick;
-			slotTwo.OnSlotClick = SlotClick;
-			slotThree.OnSlotClick = SlotClick;
-			slotFour.OnSlotClick = SlotClick;
-			slotFour.skillId = 0;
-			slotTwo.skillId = 1;
-			slotThree.skillId = 2;
-			slotFour.skillId = 3;
+			int index = 0;
+			foreach (SkillSlot slot in slots)
+			{
+				slot.skillImage = SkillsLibrary.s_Instance.getSkill(DataManager.s_Singleton.slots[index]).GetButtonImage();
+				slot.skillId = index;
+				slot.OnSlotClick = SlotClick;
+				index++;
+			}
+			refreshCatagorySelect();
+		}
+	}
+
+	private void refreshCatagorySelect()
+	{
+		//Catagory
+		int index = 0;
+		foreach (SkillSlot slot in slots)
+		{
+			slot.isSelected = false;
+			if (index == catSelectedIndex)
+			{
+				slot.isSelected = true;
+				idSelected = DataManager.s_Singleton.slots[index];
+				UpdateDescription(idSelected);
+				RefreshSkillPanel(SkillsLibrary.s_Instance.getSkillsByCatagory(index));
+			}
+			index++;
 		}
 	}
 
 	public void SlotClick(int id)
 	{
 		int catagoryId = SkillsLibrary.s_Instance.getSkill(id).GetCatagory();
-		RefreshSkillPanel(SkillsLibrary.s_Instance.getSkillsByCatagory(catagoryId));
+		catSelectedIndex = catagoryId;
+		refreshCatagorySelect();
 	}
 
 	public void SkillClick(int id)
 	{
-		Debug.Log(id);
+		SkillBehavior skill = SkillsLibrary.s_Instance.getSkill(id);
+		catSelectedIndex = skill.GetCatagory();
+		if (skill.GetCatagory() < 4)
+		{
+			DataManager.s_Singleton.slots[skill.GetCatagory()] = id;
+			DataManager.s_Singleton.Save();
+		}
+		Load();
+	}
+
+	private void UpdateDescription(int id)
+	{
 		SkillBehavior skill = SkillsLibrary.s_Instance.getSkill(id);
 		skillName.text = skill.GetName();
 		skillDescription.text = skill.GetDescription();
@@ -84,15 +116,11 @@ public class ProfilePanel : MonoBehaviour
 				slot.OnSlotClick = SkillClick;
 				slot.SkillName = skill.skillName;
 				slot.skillImage = skill.GetButtonImage();
+				slot.isSelected = idSelected == skill.id;
+				
 			}
 			index++;
 		}
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-
 	}
 
 }
