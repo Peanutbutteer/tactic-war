@@ -88,10 +88,9 @@ public class PlayerMageController : NetworkBehaviour
 
 	}
 
-    void Freezing()
+    public void Freezing()
     {
         StartCoroutine(FreezeMove());
-
     }
 
     IEnumerator FreezeMove()

@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-public class Lazer : NetworkBehaviour
+public class Laser : NetworkBehaviour
 {
-    public float lazerVelocity = 0.1f;
-    private Rigidbody lazer;
+    public float laserVelocity = 0.1f;
+    private Rigidbody laser;
     // Use this for initialization
     void Start()
     {
-        lazer = GetComponent<Rigidbody>();
+        laser = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        lazer.velocity = transform.forward * lazerVelocity;
+        laser.velocity = transform.forward * laserVelocity;
     }
 
     void OnCollisionEnter(Collision collision)

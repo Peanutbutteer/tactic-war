@@ -5,10 +5,10 @@ using CnControls;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
-public class LazerController : Skill
+public class LaserController : Skill
 {
-    public GameObject lazerPrefab;
-    public GameObject lazerChargePrefab;
+    public GameObject laserPrefab;
+    public GameObject laserChargePrefab;
 
     public override void ButtonDirection(float vertical, float horizontal)
     {
@@ -31,23 +31,23 @@ public class LazerController : Skill
     {
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("Attack", false);
-        CmdSpawnLazerChargeSkill(player);
+        CmdSpawnLaserChargeSkill(player);
         yield return new WaitForSeconds(1f);
-        CmdSpawnLazerSkill(player);
+        CmdSpawnLaserSkill(player);
 
     }
     [Command]
-    void CmdSpawnLazerChargeSkill(GameObject player)
+    void CmdSpawnLaserChargeSkill(GameObject player)
     {
         GameObject skillSpwanPosition = player.transform.FindChild("SkillSpawn").gameObject;
-        GameObject lazerCharge = (GameObject)Instantiate(lazerPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
-        NetworkServer.Spawn(lazerCharge);
+        GameObject laserCharge = (GameObject)Instantiate(laserPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
+        NetworkServer.Spawn(laserCharge);
     }
     [Command]
-    void CmdSpawnLazerSkill(GameObject player)
+    void CmdSpawnLaserSkill(GameObject player)
     {
         GameObject skillSpwanPosition = player.transform.FindChild("SkillSpawn").gameObject;
-        GameObject lazer = (GameObject)Instantiate(lazerPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
-        NetworkServer.Spawn(lazer);
+        GameObject laser = (GameObject)Instantiate(laserPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
+        NetworkServer.Spawn(laser);
     }
 }
