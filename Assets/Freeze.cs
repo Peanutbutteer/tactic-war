@@ -25,7 +25,7 @@ public class Freeze : NetworkBehaviour
         var hit = collision.gameObject;
         var playerFreeze = hit.GetComponent<PlayerMageController>();
         if(playerFreeze != null) {
-            playerFreeze.Freezing();
+            playerFreeze.RpcFreezing(playerFreeze.playerId);
         }
         var playerHealth = hit.GetComponent<PlayerHealth>();
         if (playerHealth != null)
@@ -33,4 +33,6 @@ public class Freeze : NetworkBehaviour
             playerHealth.TakeDamage(10);
         }
     }
+
+
 }

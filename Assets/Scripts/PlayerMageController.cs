@@ -93,10 +93,19 @@ public class PlayerMageController : NetworkBehaviour
         StartCoroutine(FreezeMove());
     }
 
+    [ClientRpc]
+    public void RpcFreezing(int id)
+    {
+        if (id == playerId)
+        {
+            Freezing();
+        }
+    }
+
     IEnumerator FreezeMove()
     {
-        CmdSpawnFreezePlayer(this.gameObject);
         speed = 0;
+        CmdSpawnFreezePlayer(this.gameObject);
         yield return new WaitForSeconds(1.5f);
         speed = 15;
     }

@@ -14,7 +14,7 @@ public class Laser : NetworkBehaviour
 
     void Update()
     {
-        laser.velocity = transform.forward * laserVelocity;
+        laser.velocity = transform.up * laserVelocity;
     }
 
     void OnCollisionEnter(Collision collision)
