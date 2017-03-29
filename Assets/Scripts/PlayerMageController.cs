@@ -14,6 +14,7 @@ public class PlayerMageController : NetworkBehaviour
 	public GameObject mageBody;
 	public GameObject staff;
 	public GameObject miniMapPoint;
+    public GameObject freezePlayerPrefab;
 	private int[] skillSlot = new int[4];
 	[SyncVar]
 	public Color color;
@@ -85,8 +86,30 @@ public class PlayerMageController : NetworkBehaviour
 
 	}
 
+    void Freezing()
+    {
+        StartCoroutine(FreezeMove());
 
-	void Animating(float h, float v)
+    }
+
+    IEnumerator FreezeMove()
+    {
+        CmdSpawnFreezePlayer(this.gameObject);
+        speed = 0;
+        yield return new WaitForSeconds(1.5f);
+        speed = 15;
+    }
+
+    [Command]
+    void CmdSpawnFreezePlayer(GameObject player)
+    {
+        GameObject freezePlayer = (GameObject)Instantiate(freezePlayerPrefab, player.transform.position, player.transform.rotation);
+        NetworkServer.Spawn(freezePlayer);
+        Destroy(freezePlayer, 1.5f);
+    }
+
+
+    void Animating(float h, float v)
 	{
 		// Create a boolean that is true if either of the input axes is non-zero.
 		bool walking = h != 0f || v != 0f && anim.GetBool("Attack") == false;
