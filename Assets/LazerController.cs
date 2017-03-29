@@ -10,11 +10,6 @@ public class LazerController : Skill
     public GameObject lazerPrefab;
     public GameObject lazerChargePrefab;
 
-    public override void Start()
-    {
-        base.Start();
-    }
-
     public override void ButtonDirection(float vertical, float horizontal)
     {
         base.ButtonDirection(vertical, horizontal);
