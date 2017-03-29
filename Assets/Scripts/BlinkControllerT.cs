@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CnControls;
@@ -16,9 +16,9 @@ public class BlinkControllerT : Skill
     private GameObject blinkArea;
     private Vector3 positionSkill;
 
-    public override void Start()
+	public override void OnStartPlayer()
     {
-        base.Start();
+		base.OnStartPlayer();
         BlinkPoint = FindObjectInPlayer("SkillPoint");
         blinkArea = FindObjectInPlayer("SkillArea");
 

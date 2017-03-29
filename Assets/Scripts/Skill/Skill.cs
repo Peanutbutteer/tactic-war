@@ -4,25 +4,20 @@ using UnityEngine.Networking;
 [Serializable]
 public class Skill : NetworkBehaviour, SkillBehavior
 {
-	public string skillName;
-	public int cooldown = 3;
-	public int catagory;
-	public Sprite buttonSourceImage;
-	public string description;
-	public int id
-	{
-		set { mId = value; }
-		get { return mId; }
-	}
-	protected int mId;
 	protected GameObject player;
 	protected GameObject cooldownSkill;
 	protected GameObject skillLine;
 	protected Animator anim;
 	protected float lastHorizontal;
 	protected float lastVertical;
+	public int id
+	{
+		set { mId = value; }
+		get { return mId; }
+	}
+	protected int mId;
 
-	public virtual void Start()
+	public virtual void OnStartPlayer()
 	{
 		SetLocalPlayer();
 		anim = player.GetComponent<Animator>();
@@ -81,26 +76,11 @@ public class Skill : NetworkBehaviour, SkillBehavior
 
 	public int GetCoolDownTime()
 	{
-		return cooldown;
+		return SkillsInfoLibrary.s_Instance.GetCooldownSkill(id);
 	}
 
 	public Sprite GetButtonImage()
 	{
-		return buttonSourceImage;
-	}
-
-	public int GetCatagory()
-	{
-		return catagory;
-	}
-
-	public string GetDescription()
-	{
-		return description;
-	}
-
-	public string GetName()
-	{
-		return skillName;
+		return SkillsInfoLibrary.s_Instance.GetImageSkill(id);
 	}
 }

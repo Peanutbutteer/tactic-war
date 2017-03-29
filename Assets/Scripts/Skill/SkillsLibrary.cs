@@ -23,25 +23,11 @@ public class SkillsLibrary : MonoBehaviour
 		return skills[index];
 	}
 
-	public List<Skill> getSkillsByCatagory(int cat)
-	{
-		List<Skill> skillTemp = new List<Skill>();
-		foreach (Skill skill in skills)
-		{
-			if (skill.catagory == cat)
-			{
-				skillTemp.Add(skill);
-			}
-		}
-		return skillTemp;
-	}
-
 	protected virtual void Awake()
 	{
 		if (s_Instance == null)
 		{
 			s_Instance = this;
-			DontDestroyOnLoad(this);
 			for (int index = 0; index < skills.Length; index++)
 			{
 				skills[index].id = index;

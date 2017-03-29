@@ -6,7 +6,7 @@ public class FireballCollider : MonoBehaviour {
 
 
     public float FireballVelocity = 0.1f;
-    private Rigidbody FireballRigid;
+    Rigidbody FireballRigid;
     
     // Use this for initialization
     void Start () {

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -14,9 +14,9 @@ public class FireFogController : Skill {
     private Projector rendFirefogArea;
     private Vector3 positionSkill;
 
-    public override void Start()
+	public override void OnStartPlayer()
     {
-        base.Start();
+		base.OnStartPlayer();
         firefogPoint = FindObjectInPlayer("SkillPoint");
         firefogArea = FindObjectInPlayer("SkillArea");
 

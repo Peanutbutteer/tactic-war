@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CnControls;
@@ -18,9 +18,9 @@ public class RoseBombController : Skill
     private Vector3 positionSkill;
     private Vector3 positionSpawn;
 
-    public override void Start()
+	public override void OnStartPlayer()
     {
-        base.Start();
+		base.OnStartPlayer();
         rosebombPoint = FindObjectInPlayer("SkillPoint");
         rosebombArea = FindObjectInPlayer("SkillArea");
 

@@ -7,10 +7,6 @@ using UnityEngine.Networking;
 public class BlockController : Skill
 {
     public GameObject blockPrefab;
-    // Use this for initialization
-    public override void Start () {
-        base.Start();
-    }
 
 	[Command]
 	public void CmdSpawnBlock(GameObject player)
