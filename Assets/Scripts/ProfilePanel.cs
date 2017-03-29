@@ -33,7 +33,7 @@ public class ProfilePanel : MonoBehaviour
 			int index = 0;
 			foreach (SkillSlot slot in slots)
 			{
-				slot.skillImage = SkillsLibrary.s_Instance.getSkill(DataManager.s_Singleton.slots[index]).GetButtonImage();
+				slot.skillImage = SkillsInfoLibrary.s_Instance.getSkill(DataManager.s_Singleton.slots[index]).buttonSourceImage;
 				slot.skillId = index;
 				slot.OnSlotClick = SlotClick;
 				index++;
@@ -54,7 +54,7 @@ public class ProfilePanel : MonoBehaviour
 				slot.isSelected = true;
 				idSelected = DataManager.s_Singleton.slots[index];
 				UpdateDescription(idSelected);
-				RefreshSkillPanel(SkillsLibrary.s_Instance.getSkillsByCatagory(index));
+				RefreshSkillPanel(SkillsInfoLibrary.s_Instance.getSkillsByCatagory(index));
 			}
 			index++;
 		}
@@ -62,18 +62,18 @@ public class ProfilePanel : MonoBehaviour
 
 	public void SlotClick(int id)
 	{
-		int catagoryId = SkillsLibrary.s_Instance.getSkill(id).GetCatagory();
+		int catagoryId = SkillsInfoLibrary.s_Instance.getSkill(id).catagory;
 		catSelectedIndex = catagoryId;
 		refreshCatagorySelect();
 	}
 
 	public void SkillClick(int id)
 	{
-		SkillBehavior skill = SkillsLibrary.s_Instance.getSkill(id);
-		catSelectedIndex = skill.GetCatagory();
-		if (skill.GetCatagory() < 4)
+		SkillsInfoLibrary.SkillInfo skill = SkillsInfoLibrary.s_Instance.getSkill(id);
+		catSelectedIndex = skill.catagory;
+		if (catSelectedIndex < 4)
 		{
-			DataManager.s_Singleton.slots[skill.GetCatagory()] = id;
+			DataManager.s_Singleton.slots[skill.catagory] = id;
 			DataManager.s_Singleton.Save();
 		}
 		Load();
@@ -81,12 +81,12 @@ public class ProfilePanel : MonoBehaviour
 
 	private void UpdateDescription(int id)
 	{
-		SkillBehavior skill = SkillsLibrary.s_Instance.getSkill(id);
-		skillName.text = skill.GetName();
-		skillDescription.text = skill.GetDescription();
+		SkillsInfoLibrary.SkillInfo skill = SkillsInfoLibrary.s_Instance.getSkill(id);
+		skillName.text = skill.skillName;
+		skillDescription.text = skill.description;
 	}
 
-	public void RefreshSkillPanel(List<Skill> skills)
+	public void RefreshSkillPanel(List<SkillsInfoLibrary.SkillInfo> skills)
 	{
 		foreach (Transform child in rowOne.transform)
 		{
@@ -97,7 +97,7 @@ public class ProfilePanel : MonoBehaviour
 			Destroy(child.gameObject);
 		}
 		int index = 0;
-		foreach (Skill skill in skills)
+		foreach (SkillsInfoLibrary.SkillInfo skill in skills)
 		{
 			Transform rowTransform;
 			if (index < 4)
@@ -115,7 +115,7 @@ public class ProfilePanel : MonoBehaviour
 				slot.skillId = skill.id;
 				slot.OnSlotClick = SkillClick;
 				slot.SkillName = skill.skillName;
-				slot.skillImage = skill.GetButtonImage();
+				slot.skillImage = skill.buttonSourceImage;
 				slot.isSelected = idSelected == skill.id;
 				
 			}

@@ -8,10 +8,6 @@ using UnityEngine.Networking;
 public class HomingControllerT : Skill
 {
     public GameObject homingPrefab;
-    public override void Start()
-    {
-        base.Start();
-    }
 
     public override void ButtonDirection(float vertical, float horizontal)
     {

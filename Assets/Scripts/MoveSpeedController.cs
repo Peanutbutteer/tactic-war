@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -9,9 +9,9 @@ public class MoveSpeedController : Skill
     
     private PlayerMageController playerMage;
     // Use this for initialization
-    public override void Start()
+    public override void OnStartPlayer()
     {
-        base.Start();
+		base.OnStartPlayer();
         playerMage = player.GetComponent<PlayerMageController>();
     }
 

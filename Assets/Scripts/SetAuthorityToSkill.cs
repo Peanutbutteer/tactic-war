@@ -13,7 +13,7 @@ public class SetAuthorityToSkill : NetworkBehaviour
 		{
 			for (int index = 0; index < skill.Length; index++)
 			{
-				skill[index].Start();
+				skill[index].OnStartPlayer();
 				CmdSetAuthority(skill[index].GetNetworkIdentity());
 			}
 		}
