@@ -177,11 +177,11 @@ namespace Prototype.NetworkLobby
 				}
 				else
 				{
-					LoadingModal modal = LoadingModal.s_Instance;
-					if (modal != null)
-					{
-						modal.FadeOut();
-					}
+					//LoadingModal modal = LoadingModal.s_Instance;
+					//if (modal != null)
+					//{
+					//	modal.FadeOut();
+					//}
 				}
 				m_SceneChangeMode = SceneChangeMode.None;
 			}

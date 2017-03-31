@@ -9,7 +9,7 @@ public class EndGamePanel : MonoBehaviour
 	public void UpdateWinnerText(int winnerNo)
 	{
 		string winnerTxt = "Blue Win";
-		if (winnerNo == 0)
+		if (winnerNo != 0)
 		{
 			winner.color = new Color32(201, 41, 45, 255);
 			winnerTxt = "Red Win";
