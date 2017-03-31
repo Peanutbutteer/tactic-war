@@ -24,8 +24,10 @@ public class Skill : NetworkBehaviour, SkillBehavior
 		skillLine = FindObjectInPlayer("SkillLine");
 	}
 
-	public virtual void ButtonDown() { }
-	public virtual void ButtonUp() { }
+	public virtual void ButtonDown() {
+	}
+	public virtual void ButtonUp() {
+	}
 	public virtual void ButtonDirection(float vertical, float horizontal)
 	{
 		if (horizontal != 0 || vertical != 0)
@@ -33,6 +35,11 @@ public class Skill : NetworkBehaviour, SkillBehavior
 			lastHorizontal = horizontal;
 			lastVertical = vertical;
 		}
+	}
+
+	public bool isCooldown()
+	{
+		return !cooldownSkill.activeSelf;
 	}
 
 	public NetworkIdentity networkIdentitiy
