@@ -246,9 +246,15 @@ namespace Prototype.NetworkLobby
 			if (isLocalPlayer)
 			{
 				RemovePlayer();
+				if (LobbyPlayerList._instance._players.Count <= 1)
+				{
+					LobbyPlayerList._instance.OnBackClicked();
+				}
 			}
-			else if (isServer)
+			if (isServer)
+			{
 				LobbyManager.s_Singleton.KickPlayer(connectionToClient);
+			}
 
 		}
 
