@@ -23,10 +23,16 @@ public class Freeze : NetworkBehaviour
         if (!isServer)
             return;
         var hit = collision.gameObject;
+        var playerFreeze = hit.GetComponent<PlayerMageController>();
+        if(playerFreeze != null) {
+            playerFreeze.RpcFreezing(playerFreeze.playerId);
+        }
         var playerHealth = hit.GetComponent<PlayerHealth>();
         if (playerHealth != null)
         {
             playerHealth.TakeDamage(10);
         }
     }
+
+
 }

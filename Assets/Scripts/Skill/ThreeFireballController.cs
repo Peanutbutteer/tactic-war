@@ -45,23 +45,21 @@ public class ThreeFireballController : Skill
     IEnumerator spawnFireball()
     {
         GameObject skillSpwanPosition = player.transform.FindChild("SkillSpawn").gameObject;
-        GameObject fireball = (GameObject)Instantiate(fireballPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
+        Vector3 fireballSpawnPosition = new Vector3(skillSpwanPosition.transform.position.x, skillSpwanPosition.transform.position.y, skillSpwanPosition.transform.position.z);
+        Quaternion fireballSpawnRotation = new Quaternion(skillSpwanPosition.transform.rotation.x, skillSpwanPosition.transform.rotation.y, skillSpwanPosition.transform.rotation.z, skillSpwanPosition.transform.rotation.w);
+        GameObject fireball = (GameObject)Instantiate(fireballPrefab, fireballSpawnPosition, skillSpwanPosition.transform.rotation);
         float offset;
-        //for (float round = -1f; round < 0; round++)
-        //{
-            NetworkServer.Spawn(fireball);
-            yield return new WaitForSeconds(0.4f);
-            offset = Random.Range(-10f, -5f);
-            skillSpwanPosition.transform.Rotate(0, offset, 0);
-            fireball = (GameObject)Instantiate(fireballPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
         NetworkServer.Spawn(fireball);
-        skillSpwanPosition.transform.rotation = Quaternion.Euler(0, 30, 0);
+        yield return new WaitForSeconds(0.4f);
+        offset = Random.Range(-10f, -5f);
+        fireballSpawnRotation *= Quaternion.Euler(0, offset, 0);
+        fireball = (GameObject)Instantiate(fireballPrefab, fireballSpawnPosition, fireballSpawnRotation);
+        NetworkServer.Spawn(fireball);
+        fireballSpawnRotation = new Quaternion(skillSpwanPosition.transform.rotation.x, skillSpwanPosition.transform.rotation.y, skillSpwanPosition.transform.rotation.z, skillSpwanPosition.transform.rotation.w);
         yield return new WaitForSeconds(0.2f);
-        //}
         offset = Random.Range(5f , 10f);
-        skillSpwanPosition.transform.Rotate(0, offset, 0);
-        fireball = (GameObject)Instantiate(fireballPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
+        fireballSpawnRotation *= Quaternion.Euler(0, offset, 0);
+        fireball = (GameObject)Instantiate(fireballPrefab, fireballSpawnPosition, fireballSpawnRotation);
         NetworkServer.Spawn(fireball);
-        skillSpwanPosition.transform.rotation = Quaternion.Euler(0, 30, 0);
     }
 }
