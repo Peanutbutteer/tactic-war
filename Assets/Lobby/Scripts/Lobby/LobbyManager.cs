@@ -129,7 +129,15 @@ namespace Prototype.NetworkLobby
 
 		public override void OnLobbyClientSceneChanged(NetworkConnection conn)
 		{
-			HideAllPanel();
+			if (SceneManager.GetSceneAt(0).name == lobbyScene)
+			{
+				ShowDefaultPanel();
+				Disconnect();
+			}
+			else
+			{
+				HideAllPanel();
+			}
 		}
 
 		protected virtual void Awake()
@@ -419,7 +427,6 @@ namespace Prototype.NetworkLobby
 
 			state = GameState.InLobby;
 			HideInfoPopup();
-
 			conn.RegisterHandler(MsgKicked, KickedMessageHandler);
 
 		}

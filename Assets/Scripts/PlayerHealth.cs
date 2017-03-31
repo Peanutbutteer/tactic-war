@@ -60,7 +60,7 @@ public class PlayerHealth : NetworkBehaviour
     IEnumerator EndGame()
 	{
 		yield return new WaitForSeconds(5f);
-		LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
+		LobbyManager.s_Singleton.ServerChangeScene(LobbyManager.s_Singleton.offlineScene);
 	}
 
 	void Update() {
