@@ -37,9 +37,9 @@ public class Skill : NetworkBehaviour, SkillBehavior
 		}
 	}
 
-	public bool isCooldown()
+	public virtual bool isCooldown()
 	{
-		return !cooldownSkill.activeSelf;
+		return cooldownSkill.activeSelf;
 	}
 
 	public NetworkIdentity networkIdentitiy

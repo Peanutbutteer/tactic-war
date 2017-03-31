@@ -10,4 +10,5 @@ public interface SkillBehavior
 	int GetCoolDownTime();
 	Sprite GetButtonImage();
 	NetworkIdentity GetNetworkIdentity();
+	bool isCooldown();
 }
