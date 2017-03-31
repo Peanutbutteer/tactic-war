@@ -17,6 +17,7 @@ public class SetAuthorityToSkill : NetworkBehaviour
 				CmdSetAuthority(skill[index].GetNetworkIdentity());
 			}
 		}
+		CmdSetAuthority(GameManager.s_Singleton.GetComponent<NetworkIdentity>());
 	}
 
 

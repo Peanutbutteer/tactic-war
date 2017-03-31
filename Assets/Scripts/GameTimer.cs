@@ -27,20 +27,20 @@ public class GameTimer : NetworkBehaviour
 			int secound = (int)(timer % 60);
 			RpcUpdateTime(minutes, secound);
 		}
+		else if (timer < 0)
+		{
+			Finish();
+		}
 	}
 
 	[ClientRpc]
 	void RpcUpdateTime(int minutes, int secound)
 	{
-		if (timer <= 0f)
-		{
-			Finish();
-		}
 		timeText.text = String.Format("{0:00}:{1:00}", minutes, secound);
 	}
 
 	private void Finish()
 	{
-
+		GameManager.s_Singleton.CmdEndGame();
 	}
 }

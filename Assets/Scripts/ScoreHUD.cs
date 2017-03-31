@@ -18,10 +18,14 @@ public class ScoreHUD : MonoBehaviour {
 
     public void UpdateScore(int[] score)
     {
-        if (score.Length == 2)
-        {
-            redScore.text = score[0].ToString();
-            blueScore.text = score[1].ToString();
-        }
+		if (score.Length == 2)
+		{
+			redScore.text = score[1].ToString();
+			blueScore.text = score[0].ToString();
+		}
+		else
+		{
+			redScore.text = score[0].ToString();
+		}
     }
 }
