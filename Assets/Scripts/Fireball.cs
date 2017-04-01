@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-public class Fireball : NetworkBehaviour {
 
+[RequireComponent(typeof(AudioSource))]
+public class Fireball : NetworkBehaviour {
+    public AudioClip audioFireballHit;
     // Use this for initialization
     void Start () {
 		
@@ -17,6 +19,8 @@ public class Fireball : NetworkBehaviour {
 
     void OnParticleCollision(GameObject other)
     {
+        AudioSource.PlayClipAtPoint(audioFireballHit, other.transform.position , 1000f);
+
         if (!isServer)
             return;
         var hit = other.gameObject;

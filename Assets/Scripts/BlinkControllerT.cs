@@ -5,10 +5,12 @@ using CnControls;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
+[RequireComponent(typeof(AudioSource))]
 public class BlinkControllerT : Skill
 {
     
     public GameObject effectBlink;
+    public AudioClip audioBlink;
     public int skillRadius = 15;
     
     private GameObject BlinkPoint;
@@ -45,6 +47,7 @@ public class BlinkControllerT : Skill
 
     IEnumerator CastBlink()
     {
+        AudioSource.PlayClipAtPoint(audioBlink, player.transform.position);
         rendBlinkPoint.enabled = false;
         blinkArea.SetActive(false);
         anim.SetBool("Blink", true);

@@ -43,7 +43,7 @@ public class HomingSkill : NetworkBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collision");
+
         Destroy(this.gameObject);
         if (!isServer)
             return;
