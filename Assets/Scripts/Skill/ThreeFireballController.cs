@@ -37,12 +37,12 @@ public class ThreeFireballController : Skill
     [Command]
     void CmdSpawnFireballSkill(GameObject player)
     {
-        StartCoroutine(spawnFireball());
+        StartCoroutine(spawnFireball(player));
         //GameObject skillSpwanPosition = player.transform.FindChild("SkillSpawn").gameObject;
         //GameObject fireball = (GameObject)Instantiate(fireballPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
         //NetworkServer.Spawn(fireball);
     }
-    IEnumerator spawnFireball()
+    IEnumerator spawnFireball(GameObject player)
     {
         GameObject skillSpwanPosition = player.transform.FindChild("SkillSpawn").gameObject;
         Vector3 fireballSpawnPosition = new Vector3(skillSpwanPosition.transform.position.x, skillSpwanPosition.transform.position.y, skillSpwanPosition.transform.position.z);
