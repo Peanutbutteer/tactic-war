@@ -23,7 +23,7 @@ public class MoveSpeedController : Skill
     IEnumerator MoveSpeed()
     {
         CmdSpawnSpeedUp(player);
-        playerMage.speed = 40;
+        playerMage.speed = 25;
         yield return new WaitForSeconds(1.5f);
         playerMage.speed = 15;
     }

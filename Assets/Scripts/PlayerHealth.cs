@@ -6,33 +6,42 @@ using Prototype.NetworkLobby;
 
 public class PlayerHealth : NetworkBehaviour
 {
-	public const int maxHealth = 10;
+	public const int maxHealth = 100;
 
 	[SyncVar(hook = "OnChangeHealth")]
 	public int currentHealth = maxHealth;
 
 	public RectTransform healthBar;
 
-	Animator anim;
+    private NetworkStartPosition[] spawnPoints;
+    private Animator anim;
 
 	void Start()
 	{
-		anim = GetComponent<Animator>();
+        if (isLocalPlayer)
+        {
+            spawnPoints = FindObjectsOfType<NetworkStartPosition>();
+        }
+
+        anim = GetComponent<Animator>();
 	}
 
 	public void TakeDamage(int amount)
 	{
 		if (!isServer)
 			return;
-		currentHealth -= amount;
+
+        if(anim.GetBool("Death") != true)
+		    currentHealth -= amount;
+
 		if (currentHealth <= 0)
 		{
-			currentHealth = maxHealth;
 			int id = gameObject.GetComponent<PlayerMageController>().playerId;
 			LobbyPlayer player = LobbyPlayerList._instance._players[id];
 			if (player.score < 3) player.IncrementScore();
 			RpcRespawn();
-			GameManager.s_Singleton.UpdateHudScore();
+            currentHealth = maxHealth;
+            GameManager.s_Singleton.UpdateHudScore();
 		}
 	}
 
@@ -41,8 +50,14 @@ public class PlayerHealth : NetworkBehaviour
 		anim.SetBool("Death", true);
 		yield return new WaitForSeconds(4f);
 		anim.SetBool("Death", false);
-		transform.position = new Vector3(70, 0, 60);
-	}
+
+        Vector3 spawnPoint = Vector3.zero;
+        if (spawnPoints != null && spawnPoints.Length > 0)
+        {
+            spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
+        }
+        transform.position = spawnPoint;
+    }
 
 	void OnChangeHealth(int health)
 	{
@@ -55,6 +70,6 @@ public class PlayerHealth : NetworkBehaviour
 		if (isLocalPlayer)
 		{
 			StartCoroutine(PlayerDeath());
-		}
+        }
 	}
 }
