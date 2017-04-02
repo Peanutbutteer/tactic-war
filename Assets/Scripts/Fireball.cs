@@ -5,11 +5,17 @@ using UnityEngine.Networking;
 
 [RequireComponent(typeof(AudioSource))]
 public class Fireball : NetworkBehaviour {
-    public AudioClip audioFireballHit;
+    public AudioClip soundFireballHit;
+    [Range(0f, 1f)]
+    public float volume = 0.5f;
+    [Range(0f, 40f)]
+    public int damage = 10;
+
+    private AudioSource source;
     // Use this for initialization
     void Start () {
-		
-	}
+        source = GetComponent<AudioSource>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -19,7 +25,7 @@ public class Fireball : NetworkBehaviour {
 
     void OnParticleCollision(GameObject other)
     {
-        AudioSource.PlayClipAtPoint(audioFireballHit, other.transform.position , 1000f);
+        source.PlayOneShot(soundFireballHit, volume);
 
         if (!isServer)
             return;
@@ -27,7 +33,7 @@ public class Fireball : NetworkBehaviour {
         var playerHealth = hit.GetComponent<PlayerHealth>();
         if (playerHealth != null)
         {
-            playerHealth.TakeDamage(10);
+            playerHealth.TakeDamage(damage);
         }
         
     }

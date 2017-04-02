@@ -8,11 +8,20 @@ public class HomingSkill : NetworkBehaviour
     private Rigidbody homingMissile;
 	[SyncVar]
 	public int idOwner;
+    public AudioClip soundHoming;
+    [Range(0f, 1f)]
+    public float volume = 0.5f;
+
+    private AudioSource source;
     // Use this for initialization
     void Start()
     {
-		homingMissile = GetComponent<Rigidbody>();
-		Debug.Log("ID Owner:" + idOwner);
+        homingMissile = GetComponent<Rigidbody>();
+        source = GetComponent<AudioSource>();
+        source.loop = true;
+        source.volume = volume;
+        source.clip = soundHoming;
+        source.Play();
     }
 
     // Update is called once per frame

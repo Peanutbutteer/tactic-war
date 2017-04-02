@@ -12,7 +12,11 @@ public class BlinkControllerT : Skill
     public GameObject effectBlink;
     public AudioClip audioBlink;
     public int skillRadius = 15;
-    
+
+    [Range(0f, 1f)]
+    public float volume = 0.5f;
+
+    private AudioSource audioSource;
     private GameObject BlinkPoint;
     private Projector rendBlinkPoint;
     private GameObject blinkArea;
@@ -23,6 +27,8 @@ public class BlinkControllerT : Skill
 		base.OnStartPlayer();
         BlinkPoint = FindObjectInPlayer("SkillPoint");
         blinkArea = FindObjectInPlayer("SkillArea");
+
+        audioSource = player.GetComponent<AudioSource>();
 
         rendBlinkPoint = BlinkPoint.GetComponent<Projector>();
         rendBlinkPoint.orthographicSize = 2;
@@ -47,7 +53,8 @@ public class BlinkControllerT : Skill
 
     IEnumerator CastBlink()
     {
-        AudioSource.PlayClipAtPoint(audioBlink, player.transform.position);
+        audioSource.PlayOneShot(audioBlink, volume);
+
         rendBlinkPoint.enabled = false;
         blinkArea.SetActive(false);
         anim.SetBool("Blink", true);

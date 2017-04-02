@@ -7,6 +7,7 @@ using Prototype.NetworkLobby;
 public class PlayerHealth : NetworkBehaviour
 {
 	public const int maxHealth = 100;
+    public AudioClip spawnSound;
 
 	[SyncVar(hook = "OnChangeHealth")]
 	public int currentHealth = maxHealth;
@@ -56,6 +57,7 @@ public class PlayerHealth : NetworkBehaviour
         {
             spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
         }
+        GetComponent<AudioSource>().PlayOneShot(spawnSound);
         transform.position = spawnPoint;
     }
 
