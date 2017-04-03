@@ -18,6 +18,7 @@ public class MoveSpeedController : Skill
     public override void ButtonDown()
     {
         base.ButtonDown();
+		cooldownSkill.SetActive(true);
         StartCoroutine(MoveSpeed());        
     }
     IEnumerator MoveSpeed()
