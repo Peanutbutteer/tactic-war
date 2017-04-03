@@ -6,6 +6,8 @@ using UnityEngine.Networking;
 
 public class Firefog : NetworkBehaviour
 {
+    [Range(0f, 10f)]
+    public int damage = 5;
 
     private bool burned = false;
 
@@ -38,7 +40,7 @@ public class Firefog : NetworkBehaviour
             var playerHealth = hit.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
-                playerHealth.TakeDamage(2);
+                playerHealth.TakeDamage(damage);
             }
         }
     }

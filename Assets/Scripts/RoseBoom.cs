@@ -5,9 +5,11 @@ using UnityEngine.Networking;
 
 public class RoseBoom : NetworkBehaviour
 {
+    [Range(0f, 50f)]
+    public int damage = 20;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         StartCoroutine(DisableCollider());
 	}
 	
@@ -31,7 +33,7 @@ public class RoseBoom : NetworkBehaviour
         var playerHealth = hit.GetComponent<PlayerHealth>();
         if (playerHealth != null)
         {
-            playerHealth.TakeDamage(20);
+            playerHealth.TakeDamage(damage);
         }
 
     }

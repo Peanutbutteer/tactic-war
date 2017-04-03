@@ -9,6 +9,7 @@ public class FireballControllerT : Skill
 {
     public GameObject fireballPrefab;
 
+
     public override void ButtonDirection(float vertical, float horizontal)
     {
         base.ButtonDirection(vertical, horizontal);

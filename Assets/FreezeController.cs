@@ -38,5 +38,6 @@ public class FreezeController : Skill
         GameObject skillSpwanPosition = player.transform.FindChild("SkillSpawn").gameObject;
         GameObject freeze = (GameObject)Instantiate(freezePrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
         NetworkServer.Spawn(freeze);
+        Destroy(freeze, 10f);
     }
 }

@@ -11,12 +11,17 @@ public class SkillSlot : MonoBehaviour
 	public Action<int> OnSlotClick;
 	public int skillId;
 	public bool isSelected = false;
-	private Sprite normalState;
+    protected AudioSource source;
+    protected AudioClip menuSound;
+    private Sprite normalState;
 	private Sprite selectedState;
 
 	protected void Start()
 	{
-		normalState = Resources.Load<Sprite>("normal");
+        menuSound = (AudioClip)Resources.Load("Audio/ChooseSkill", typeof(AudioClip));
+        source = transform.root.GetComponent<AudioSource>();
+        GetComponent<Button>().onClick.AddListener(TaskOnClick);
+        normalState = Resources.Load<Sprite>("normal");
 		selectedState = Resources.Load<Sprite>("selected");
 		button.onClick.AddListener(() =>
 		{
@@ -27,16 +32,27 @@ public class SkillSlot : MonoBehaviour
 		});
 	}
 
-	void Update()
-	{
-		if (isSelected)
-		{
-			button.image.sprite = selectedState;
-		}
-		else
-		{
-			button.image.sprite = normalState;
-		}
+    protected void TaskOnClick()
+    {
+        source.clip = menuSound;
+        source.Play();
+    }
+
+    void initSound()
+    {
+
+    }
+
+    void Update()
+    {
+        if (isSelected)
+        {
+            button.image.sprite = selectedState;
+        }
+        else
+        {
+            button.image.sprite = normalState;
+        }
 	}
 
 	public Sprite skillImage

@@ -9,11 +9,28 @@ using UnityEngine.UI;
 /// </summary>
 public class BackButton : MonoBehaviour
 {
-	private static List<BackButton> s_buttonStack = new List<BackButton>();
+    public AudioSource source;
 
+    private static List<BackButton> s_buttonStack = new List<BackButton>();
+    private AudioClip backSound;
 	protected Button m_BackButton;
 
-	protected virtual void OnEnable()
+    void Start()
+    {
+        backSound = (AudioClip)Resources.Load("Audio/Back", typeof(AudioClip));
+        GetComponent<Button>().onClick.AddListener(TaskOnClick);
+    }
+
+
+    protected virtual void TaskOnClick()
+    {
+        source.clip = backSound;
+        source.volume = 0.5f;
+        source.Play();
+    }
+
+
+    protected virtual void OnEnable()
 	{
 		m_BackButton = GetComponent<Button>();
 

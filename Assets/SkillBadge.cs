@@ -5,12 +5,12 @@ using UnityEngine.UI;
 public class SkillBadge : SkillSlot
 {
 	public Text skillName;
-	public void Start()
-	{
-		base.Start();
-	}
+    public new void Start()
+    {
+        base.Start();
+    }
 
-	public string SkillName
+    public string SkillName
 	{
 		set { skillName.text = value; }
 	}

@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class SplashScreen : MonoBehaviour {
 	public string sceneName = "LobbyScene";
-	// Use this for initialization
-	void Start () {
+    public AudioClip sound;
+    public AudioSource source;
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -16,7 +18,9 @@ public class SplashScreen : MonoBehaviour {
 			Application.Quit();
 		}
 		if (Input.anyKey) {
-			GoToNextScene ();
+            source.clip = sound;
+            source.Play();
+            GoToNextScene ();
 		}
 	}
 

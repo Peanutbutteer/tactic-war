@@ -4,7 +4,10 @@ using UnityEngine;
 using UnityEngine.Networking;
 public class Laser : NetworkBehaviour
 {
+    [Range(0f, 40f)]
     public float laserVelocity = 0.1f;
+    [Range(0f, 40f)]
+    public int damage = 10;
     private Rigidbody laser;
     // Use this for initialization
     void Start()
@@ -26,7 +29,7 @@ public class Laser : NetworkBehaviour
         var playerHealth = hit.GetComponent<PlayerHealth>();
         if (playerHealth != null)
         {
-            playerHealth.TakeDamage(10);
+            playerHealth.TakeDamage(damage);
         }
     }
 }

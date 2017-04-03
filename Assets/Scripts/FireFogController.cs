@@ -6,7 +6,12 @@ using UnityEngine.Networking;
 public class FireFogController : Skill {
 
     public GameObject firefogPrefab;
-    public int skillRadius = 15;
+    [Range(10f, 50f)]
+    public int skillRadius = 20;
+    [Range(10f, 50f)]
+    public int skillArea = 20;
+    [Range(2f, 20f)]
+    public int skillSize = 12;
 
     private GameObject firefogPoint;
     private GameObject firefogArea;
@@ -21,19 +26,19 @@ public class FireFogController : Skill {
         firefogArea = FindObjectInPlayer("SkillArea");
 
         rendFirefogPoint = firefogPoint.GetComponent<Projector>();
-        rendFirefogPoint.orthographicSize = 12;
-        rendFirefogPoint.enabled = false;
-
         rendFirefogArea = firefogArea.GetComponent<Projector>();
-        rendFirefogArea.orthographicSize = 20;
+        
 
     }
 
     public override void ButtonDirection(float vertical, float horizontal)
     {
         base.ButtonDirection(vertical, horizontal);
+        rendFirefogPoint.orthographicSize = skillSize;
+        rendFirefogArea.orthographicSize = skillArea;
+
+        firefogPoint.SetActive(true);
         firefogArea.SetActive(true);
-        rendFirefogPoint.enabled = true;
         positionSkill = new Vector3(horizontal * skillRadius, 1000f * 0.03f, vertical * skillRadius);
         firefogPoint.transform.position = player.transform.position + positionSkill;
     }
@@ -47,7 +52,7 @@ public class FireFogController : Skill {
 
     IEnumerator CastFirefog()
     {
-        rendFirefogPoint.enabled = false;
+        firefogPoint.SetActive(false);
         firefogArea.SetActive(false);
         anim.SetBool("Blink", true);
         yield return new WaitForSeconds(0.5f);
