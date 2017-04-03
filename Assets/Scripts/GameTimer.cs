@@ -10,6 +10,7 @@ public class GameTimer : NetworkBehaviour
 	[SerializeField]
 	private float timer;
 	public Text timeText;
+	private bool isFinishing = false;
 
 	// Use this for initialization
 	void Start()
@@ -27,8 +28,9 @@ public class GameTimer : NetworkBehaviour
 			int secound = (int)(timer % 60);
 			RpcUpdateTime(minutes, secound);
 		}
-		else if (timer < 0)
+		else if (timer < 0 && !isFinishing)
 		{
+			isFinishing = true;
 			Finish();
 		}
 	}
