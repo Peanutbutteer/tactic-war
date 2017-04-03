@@ -11,11 +11,13 @@ public class PlayerHealth : NetworkBehaviour
 
 	[SyncVar(hook = "OnChangeHealth")]
 	public int currentHealth = maxHealth;
+    [SyncVar(hook = "OnChangeSpawnIndex")]
+    private int spawnIndex = 2;
 
-	public RectTransform healthBar;
+    public RectTransform healthBar;
 
     private NetworkStartPosition[] spawnPoints;
-    private int spawnIndex = 0;
+    
     private Animator anim;
 
 	void Start()
@@ -56,10 +58,8 @@ public class PlayerHealth : NetworkBehaviour
         Vector3 spawnPoint = Vector3.zero;
         if (spawnPoints != null && spawnPoints.Length > 0)
         {
-
             spawnPoint = spawnPoints[spawnIndex].transform.position;
             spawnIndex++;
-            Debug.Log(spawnIndex);
             if(spawnIndex >= spawnPoints.Length)
             {
                 spawnIndex = 0;
@@ -73,6 +73,12 @@ public class PlayerHealth : NetworkBehaviour
 	{
 		healthBar.sizeDelta = new Vector2(health, healthBar.sizeDelta.y);
 	}
+
+    void OnChangeSpawnIndex(int index)
+	{
+        spawnIndex += index;
+
+    }
 
 	[ClientRpc]
 	void RpcRespawn()
