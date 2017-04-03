@@ -25,6 +25,7 @@ public class BackButton : MonoBehaviour
     protected virtual void TaskOnClick()
     {
         source.clip = backSound;
+        source.volume = 0.5f;
         source.Play();
     }
 
