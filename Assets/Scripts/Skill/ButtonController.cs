@@ -53,6 +53,10 @@ public class ButtonController : NetworkBehaviour
 		{
 			skill.ButtonDirection(CnInputManager.GetAxis(verticalButtonName), CnInputManager.GetAxis(horizontalButtonName));
 		}
+		if (CnInputManager.GetButtonDown("CancelSkill"))
+		{
+			Debug.Log("Cancel");
+		}
 	}
 
 	protected void InstantiateButton()
