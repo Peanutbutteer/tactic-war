@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-
+using UnityEngine.UI;
 namespace CnControls
 {
     /// <summary>
@@ -9,6 +9,7 @@ namespace CnControls
     /// </summary>
     public class SimpleButton : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
     {
+        public Image actionButton;
         /// <summary>
         /// The name of the button
         /// </summary>
@@ -44,6 +45,10 @@ namespace CnControls
         /// <param name="eventData">Data of the passed event</param>
         public void OnPointerUp(PointerEventData eventData)
         {
+            if (actionButton != null)
+            {
+                actionButton.gameObject.SetActive(false);
+            }
             _virtualButton.Release();
         }
 
@@ -54,6 +59,10 @@ namespace CnControls
         /// <param name="eventData">Data of the passed event</param>
         public void OnPointerDown(PointerEventData eventData)
         {
+            if (actionButton != null)
+            {
+                actionButton.gameObject.SetActive(true);
+            }
             _virtualButton.Press();
         }
     }
