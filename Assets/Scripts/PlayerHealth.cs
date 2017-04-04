@@ -11,12 +11,15 @@ public class PlayerHealth : NetworkBehaviour
 
 	[SyncVar(hook = "OnChangeHealth")]
 	public int currentHealth = maxHealth;
+    private int spawnIndex = 2;
 
-	public RectTransform healthBar;
+    public RectTransform healthBar;
 
     private NetworkStartPosition[] spawnPoints;
-    private int spawnIndex = 0;
+    
     private Animator anim;
+
+	private Vector3 spawnPoint = Vector3.zero;
 
 	void Start()
 	{
@@ -52,22 +55,30 @@ public class PlayerHealth : NetworkBehaviour
 		anim.SetBool("Death", true);
 		yield return new WaitForSeconds(4f);
 		anim.SetBool("Death", false);
-
-        Vector3 spawnPoint = Vector3.zero;
-        if (spawnPoints != null && spawnPoints.Length > 0)
-        {
-
-            spawnPoint = spawnPoints[spawnIndex].transform.position;
-            spawnIndex++;
-            Debug.Log(spawnIndex);
-            if(spawnIndex >= spawnPoints.Length)
-            {
-                spawnIndex = 0;
-            }
-        }
-        GetComponent<AudioSource>().PlayOneShot(spawnSound);
-        transform.position = spawnPoint;
+		CmdUpdateIndex();
+		spawnPoint = spawnPoints[spawnIndex].transform.position;
+		GetComponent<AudioSource>().PlayOneShot(spawnSound);
+		transform.position = spawnPoint;
     }
+
+	[Command]
+	void CmdUpdateIndex()
+	{
+		if (spawnPoints != null && spawnPoints.Length > 0)
+		{
+			spawnIndex++;
+			if (spawnIndex >= spawnPoints.Length)
+			{
+				spawnIndex = 0;
+			}
+			RpcUpdateSpwan(spawnIndex);
+		}
+	}
+
+	void RpcUpdateSpwan(int index)
+	{
+		this.spawnIndex = index;
+	}
 
 	void OnChangeHealth(int health)
 	{

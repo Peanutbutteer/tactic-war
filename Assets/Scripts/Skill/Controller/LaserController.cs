@@ -23,10 +23,8 @@ public class LaserController : Skill
     public override void ButtonUp()
     {
         base.ButtonUp();
-        skillLine.SetActive(false);
         anim.SetBool("Attack", true);
         player.transform.rotation = Util.Turning(lastHorizontal, lastVertical);
-        cooldownSkill.SetActive(true);
         StartCoroutine(Attack());
     }
 

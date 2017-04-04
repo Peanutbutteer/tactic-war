@@ -5,24 +5,23 @@ using CnControls;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
-public class FreezeController : Skill
+public class FireballController : Skill
 {
-    public GameObject freezePrefab;
+    public GameObject fireballPrefab;
+
 
     public override void ButtonDirection(float vertical, float horizontal)
     {
         base.ButtonDirection(vertical, horizontal);
         skillLine.SetActive(true);
-        skillLine.transform.rotation = Util.TurningFix(horizontal, vertical);
+        skillLine.transform.rotation = Util.TurningFix(horizontal , vertical);
     }
 
     public override void ButtonUp()
     {
         base.ButtonUp();
-        skillLine.SetActive(false);
         anim.SetBool("Attack", true);
         player.transform.rotation = Util.Turning(lastHorizontal, lastVertical);
-        cooldownSkill.SetActive(true);
         StartCoroutine(Attack());
     }
 
@@ -30,14 +29,14 @@ public class FreezeController : Skill
     {
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("Attack", false);
-        CmdSpawnFreezeSkill(player);
+        CmdSpawnFireballSkill(player);
     }
+
     [Command]
-    void CmdSpawnFreezeSkill(GameObject player)
+    void CmdSpawnFireballSkill(GameObject player)
     {
         GameObject skillSpwanPosition = player.transform.FindChild("SkillSpawn").gameObject;
-        GameObject freeze = (GameObject)Instantiate(freezePrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
-        NetworkServer.Spawn(freeze);
-        Destroy(freeze, 10f);
+        GameObject fireball = (GameObject)Instantiate(fireballPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
+        NetworkServer.Spawn(fireball);
     }
 }

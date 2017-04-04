@@ -8,7 +8,19 @@ public class BlockController : Skill
 {
     public GameObject blockPrefab;
 
-	[Command]
+    public override void ButtonDown()
+    {
+    }
+
+    public override void ButtonUp()
+    {
+        CmdSpawnBlock(player);
+    }
+
+    public override void ButtonDirection(float vertical, float horizontal)
+    {
+    }
+    [Command]
 	public void CmdSpawnBlock(GameObject player)
 	{
 		GameObject block = Instantiate(blockPrefab, blockPrefab.transform.position, blockPrefab.transform.rotation);
@@ -24,14 +36,5 @@ public class BlockController : Skill
          block.transform.localPosition = localPos;
          block.transform.localRotation = localRot;
      }
-    public override void ButtonDown() {
-    }
 
-    public override void ButtonUp() {
-        cooldownSkill.SetActive(true);
-        CmdSpawnBlock(player);
-    }
-
-    public override void ButtonDirection(float vertical, float horizontal) {
-    }
 }

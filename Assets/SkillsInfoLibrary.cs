@@ -67,7 +67,8 @@ public class SkillsInfoLibrary : MonoBehaviour
 		public string skillName;
 		public Sprite buttonSourceImage;
 		public string description;
-		public int id
+        public string damage;
+        public int id
 		{
 			set { mId = value; }
 			get { return mId; }

@@ -7,7 +7,9 @@ public class Skill : NetworkBehaviour, SkillBehavior
 	protected GameObject player;
 	protected GameObject cooldownSkill;
 	protected GameObject skillLine;
-	protected Animator anim;
+    protected GameObject skillPoint;
+    protected GameObject skillArea;
+    protected Animator anim;
 	protected float lastHorizontal;
 	protected float lastVertical;
 	public int id
@@ -22,12 +24,24 @@ public class Skill : NetworkBehaviour, SkillBehavior
 		SetLocalPlayer();
 		anim = player.GetComponent<Animator>();
 		skillLine = FindObjectInPlayer("SkillLine");
-	}
+        skillPoint = FindObjectInPlayer("SkillPoint");
+        skillArea = FindObjectInPlayer("SkillArea");
+    }
 
 	public virtual void ButtonDown() {
 	}
 	public virtual void ButtonUp() {
-	}
+        skillLine.SetActive(false);
+        skillArea.SetActive(false);
+        skillPoint.SetActive(false);
+        cooldownSkill.SetActive(true);
+    }
+    public virtual void ButtonCancel()
+    {
+        skillArea.SetActive(false);
+        skillPoint.SetActive(false);
+        skillLine.SetActive(false);
+    }
 	public virtual void ButtonDirection(float vertical, float horizontal)
 	{
 		if (horizontal != 0 || vertical != 0)

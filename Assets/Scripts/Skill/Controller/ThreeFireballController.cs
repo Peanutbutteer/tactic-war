@@ -19,10 +19,8 @@ public class ThreeFireballController : Skill
     public override void ButtonUp()
     {
         base.ButtonUp();
-        skillLine.SetActive(false);
         anim.SetBool("Attack", true);
         player.transform.rotation = Util.Turning(lastHorizontal, lastVertical);
-        cooldownSkill.SetActive(true);
         StartCoroutine(Attack());
     }
 
@@ -32,15 +30,11 @@ public class ThreeFireballController : Skill
         CmdSpawnFireballSkill(player);
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("Attack", false);
-        //CmdSpawnSkill("SkillSpawn", fireballPrefab, player);
     }
     [Command]
     void CmdSpawnFireballSkill(GameObject player)
     {
         StartCoroutine(spawnFireball(player));
-        //GameObject skillSpwanPosition = player.transform.FindChild("SkillSpawn").gameObject;
-        //GameObject fireball = (GameObject)Instantiate(fireballPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
-        //NetworkServer.Spawn(fireball);
     }
     IEnumerator spawnFireball(GameObject player)
     {

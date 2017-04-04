@@ -5,25 +5,22 @@ using CnControls;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
-public class FireballControllerT : Skill
+public class HomingController : Skill
 {
-    public GameObject fireballPrefab;
-
+    public GameObject homingPrefab;
 
     public override void ButtonDirection(float vertical, float horizontal)
     {
         base.ButtonDirection(vertical, horizontal);
         skillLine.SetActive(true);
-        skillLine.transform.rotation = Util.TurningFix(horizontal , vertical);
+        skillLine.transform.rotation = Util.TurningFix(horizontal, vertical);
     }
 
     public override void ButtonUp()
     {
         base.ButtonUp();
-        skillLine.SetActive(false);
         anim.SetBool("Attack", true);
         player.transform.rotation = Util.Turning(lastHorizontal, lastVertical);
-        cooldownSkill.SetActive(true);
         StartCoroutine(Attack());
     }
 
@@ -31,19 +28,15 @@ public class FireballControllerT : Skill
     {
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("Attack", false);
-        //CmdSpawnSkill("SkillSpawn", fireballPrefab, player);
-        CmdSpawnFireballSkill(player);
+        CmdSpawnSkill(player);
     }
+
     [Command]
-    void CmdSpawnFireballSkill(GameObject player)
+    void CmdSpawnSkill(GameObject player)
     {
         GameObject skillSpwanPosition = player.transform.FindChild("SkillSpawn").gameObject;
-        GameObject fireball = (GameObject)Instantiate(fireballPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
-        NetworkServer.Spawn(fireball);
+        GameObject Homing = (GameObject)Instantiate(homingPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
+        Homing.GetComponent<HomingSkill>().idOwner = player.GetComponent<PlayerMageController>().playerId;
+        NetworkServer.SpawnWithClientAuthority(Homing, connectionToClient);
     }
-    //[Command]
-    //protected override void SpawnSkill(string childName, GameObject skillPrefab, GameObject player)
-    //{
-    //    base.CmdSpawnSkill(childName, skillPrefab , player);
-    //}
 }

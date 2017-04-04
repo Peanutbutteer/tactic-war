@@ -13,8 +13,10 @@ public class ProfilePanel : MonoBehaviour
 	public RectTransform rowOne;
 	public RectTransform rowTwo;
 	public Text skillName;
-	public Text skillDescription;
-	public GameObject skillSlotPrefab;
+    public Text skillCooldown;
+    public Text skillDescription;
+    public Text skillDamage;
+    public GameObject skillSlotPrefab;
 	public int catSelectedIndex = SKILL_CATAGORY_ONE;
 	public SkillSlot[] slots;
 	public int idSelected = 0;
@@ -83,7 +85,9 @@ public class ProfilePanel : MonoBehaviour
 	{
 		SkillsInfoLibrary.SkillInfo skill = SkillsInfoLibrary.s_Instance.getSkill(id);
 		skillName.text = skill.skillName;
+        skillCooldown.text = "Cooldown Time : " + skill.cooldown +"sec";
 		skillDescription.text = skill.description;
+        skillDamage.text = "Damage : " + skill.damage + " hp";
 	}
 
 	public void RefreshSkillPanel(List<SkillsInfoLibrary.SkillInfo> skills)
