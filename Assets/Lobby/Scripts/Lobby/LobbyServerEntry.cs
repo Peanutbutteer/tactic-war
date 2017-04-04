@@ -29,10 +29,12 @@ namespace Prototype.NetworkLobby
 
         void JoinMatch(NetworkID networkID, LobbyManager lobbyManager)
         {
+
+			LobbyManager.s_Singleton.state = GameState.Connecting;
+			LobbyManager.s_Singleton.ShowConnectingModal(true);
+
+
 			lobbyManager.matchMaker.JoinMatch(networkID, "", "", "", 0, 0, lobbyManager.OnMatchJoined);
-			lobbyManager.backDelegate = lobbyManager.StopClientClbk;
-            lobbyManager._isMatchmaking = true;
-            lobbyManager.DisplayIsConnecting();
         }
     }
 }
