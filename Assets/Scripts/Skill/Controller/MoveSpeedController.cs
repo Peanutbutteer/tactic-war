@@ -15,11 +15,10 @@ public class MoveSpeedController : Skill
         playerMage = player.GetComponent<PlayerMageController>();
     }
 
-    public override void ButtonDown()
+    public override void ButtonUp()
     {
-        base.ButtonDown();
-		cooldownSkill.SetActive(true);
-        StartCoroutine(MoveSpeed());        
+        base.ButtonUp();
+        StartCoroutine(MoveSpeed());
     }
     IEnumerator MoveSpeed()
     {

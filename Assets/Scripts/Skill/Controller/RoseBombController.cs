@@ -13,63 +13,50 @@ public class RoseBombController : Skill
     [Range(10f, 50f)]
     public int skillRadius = 20;
     [Range(10f, 50f)]
-    public int skillArea = 20;
+    public int skillAreaSize = 20;
     [Range(2f, 10f)]
-    public int skillSize = 2;
+    public int skillPointSize = 2;
 
-    private GameObject rosebombPoint;
-    private GameObject rosebombArea;
-    private Projector rendRoseBombPoint;
-    private Projector rendRoseBombArea;
     private Vector3 positionSkill;
     private Vector3 positionSpawn;
 
 	public override void OnStartPlayer()
     {
 		base.OnStartPlayer();
-        rosebombPoint = FindObjectInPlayer("SkillPoint");
-        rosebombArea = FindObjectInPlayer("SkillArea");
-
-        rendRoseBombPoint = rosebombPoint.GetComponent<Projector>();
-        rendRoseBombArea = rosebombArea.GetComponent<Projector>();
-        
     }
 
     public override void ButtonDirection(float vertical, float horizontal)
     {
         base.ButtonDirection(vertical, horizontal);
-        rendRoseBombPoint.orthographicSize = skillSize;
-        rendRoseBombArea.orthographicSize = skillArea;
-        rosebombArea.SetActive(true);
-        rosebombPoint.SetActive(true);
+        skillPoint.GetComponent<Projector>().orthographicSize = skillPointSize;
+        skillArea.GetComponent<Projector>().orthographicSize = skillAreaSize;
+        skillArea.SetActive(true);
+        skillPoint.SetActive(true);
         positionSkill = new Vector3(horizontal * skillRadius, 1000f * 0.03f, vertical * skillRadius);
-        rosebombPoint.transform.position = player.transform.position + positionSkill;
+        skillPoint.transform.position = player.transform.position + positionSkill;
     }
 
     public override void ButtonUp()
     {
         base.ButtonUp();
-        cooldownSkill.SetActive(true);
         StartCoroutine(CastRoseFire());
     }
 
     IEnumerator CastRoseFire()
     {
-        rosebombArea.SetActive(false);
-        rosebombPoint.SetActive(false);
         anim.SetBool("Blink", true);
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("Blink", false);
 
         positionSpawn = new Vector3(
-            rosebombPoint.transform.position.x,
-            player.transform.position.y + 3, 
-            rosebombPoint.transform.position.z);
+        skillPoint.transform.position.x,
+        player.transform.position.y + 3,
+        skillPoint.transform.position.z);
 
         CmdSpawnRoseFire(player , positionSpawn);
         yield return new WaitForSeconds(3f);
         CmdSpawnRoseBoom(player , positionSpawn);
-        Vector3 position = rosebombPoint.transform.position;
+        Vector3 position = skillPoint.transform.position;
         position.y = 0;
         positionSkill = new Vector3(0, 0, 0);
 
@@ -77,7 +64,6 @@ public class RoseBombController : Skill
     [Command]
     void CmdSpawnRoseFire(GameObject player , Vector3 positionSpawn)
     {
-        
         var RoseFire = (GameObject)Instantiate(rosefirePrefab, positionSpawn, player.transform.rotation);
         NetworkServer.Spawn(RoseFire);
         Destroy(RoseFire, 5f);

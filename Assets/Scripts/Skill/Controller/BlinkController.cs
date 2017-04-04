@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 
 [RequireComponent(typeof(AudioSource))]
-public class BlinkControllerT : Skill
+public class BlinkController : Skill
 {
     
     public GameObject effectBlink;
@@ -14,45 +14,33 @@ public class BlinkControllerT : Skill
     [Range(10f, 50f)]
     public int skillRadius = 20;
     [Range(10f, 50f)]
-    public int skillArea = 20;
+    public int skillAreaSize = 20;
     [Range(0f, 1f)]
     public float volume = 0.5f;
 
     private AudioSource audioSource;
-    private GameObject blinkPoint;
-    private GameObject blinkArea;
-    private Projector rendBlinkPoint;
-    private Projector rendBlinkArea;
     private Vector3 positionSkill;
 
 	public override void OnStartPlayer()
     {
 		base.OnStartPlayer();
-        blinkPoint = FindObjectInPlayer("SkillPoint");
-        blinkArea = FindObjectInPlayer("SkillArea");
-
         audioSource = player.GetComponent<AudioSource>();
-
-        rendBlinkPoint = blinkPoint.GetComponent<Projector>();
-        rendBlinkArea = blinkArea.GetComponent<Projector>();
-        
     }
 
     public override void ButtonDirection(float vertical, float horizontal)
     {
         base.ButtonDirection(vertical, horizontal);
-        rendBlinkPoint.orthographicSize = 2;
-        rendBlinkArea.orthographicSize = skillArea;
-        blinkArea.SetActive(true);
-        blinkPoint.SetActive(true);
+        skillPoint.GetComponent<Projector>().orthographicSize = 2;
+        skillArea.GetComponent<Projector>().orthographicSize = skillAreaSize;
+        skillArea.SetActive(true);
+        skillPoint.SetActive(true);
         positionSkill = new Vector3(horizontal * skillRadius, 1000f * 0.03f, vertical * skillRadius);
-        blinkPoint.transform.position = player.transform.position + positionSkill;
+        skillPoint.transform.position = player.transform.position + positionSkill;
     }
 
     public override void ButtonUp()
     {
         base.ButtonUp();
-        cooldownSkill.SetActive(true);
         StartCoroutine(CastBlink());
     }
 
@@ -60,15 +48,13 @@ public class BlinkControllerT : Skill
     {
         audioSource.PlayOneShot(audioBlink, volume);
         
-        blinkArea.SetActive(false);
-        blinkPoint.SetActive(false);
         anim.SetBool("Blink", true);
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("Blink", false);
 
         CmdSpawnEffectBlink(player);
         
-        Vector3 position = blinkPoint.transform.position;
+        Vector3 position = skillPoint.transform.position;
         position.y = 0;
         player.transform.position = position;
         positionSkill = new Vector3(0, 0, 0);

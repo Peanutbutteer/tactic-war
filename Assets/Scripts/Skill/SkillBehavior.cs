@@ -4,6 +4,7 @@ public interface SkillBehavior
 {
 	void ButtonDown();
 	void ButtonUp();
+    void ButtonCancel();
 	void ButtonDirection(float x, float y);
 	void OnStartPlayer();
 	void SetCooldown(GameObject gameObject);

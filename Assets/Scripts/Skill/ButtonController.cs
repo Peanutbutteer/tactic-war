@@ -18,6 +18,7 @@ public class ButtonController : NetworkBehaviour
 	private string verticalButtonName;
 	private string horizontalButtonName;
 
+    private bool cancelSkill = false;
 	private GameObject cooldownPrefab;
 	private GameObject canvas;
 	private Sprite buttonImage;
@@ -45,19 +46,27 @@ public class ButtonController : NetworkBehaviour
 		{
 			skill.ButtonDown();
 		}
-		if (CnInputManager.GetButtonUp(simpleButtonName))
+		if (CnInputManager.GetButtonUp(simpleButtonName) && !cancelSkill)
 		{
 			skill.ButtonUp();
 		}
+        if (CnInputManager.GetButtonUp(simpleButtonName) && cancelSkill)
+        {
+            skill.ButtonCancel();
+        }
 		if (!isPressButton && CnInputManager.GetButton(simpleButtonName))
 		{
 			skill.ButtonDirection(CnInputManager.GetAxis(verticalButtonName), CnInputManager.GetAxis(horizontalButtonName));
 		}
 		if (CnInputManager.GetButtonDown("CancelSkill"))
 		{
-			Debug.Log("Cancel");
+            cancelSkill = true;
 		}
-	}
+        if (CnInputManager.GetButtonUp("CancelSkill"))
+        {
+            cancelSkill = false;
+        }
+    }
 
 	protected void InstantiateButton()
 	{

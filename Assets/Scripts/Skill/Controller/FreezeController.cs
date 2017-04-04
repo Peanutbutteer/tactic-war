@@ -5,9 +5,9 @@ using CnControls;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
-public class HomingControllerT : Skill
+public class FreezeController : Skill
 {
-    public GameObject homingPrefab;
+    public GameObject freezePrefab;
 
     public override void ButtonDirection(float vertical, float horizontal)
     {
@@ -19,10 +19,8 @@ public class HomingControllerT : Skill
     public override void ButtonUp()
     {
         base.ButtonUp();
-        skillLine.SetActive(false);
         anim.SetBool("Attack", true);
         player.transform.rotation = Util.Turning(lastHorizontal, lastVertical);
-        cooldownSkill.SetActive(true);
         StartCoroutine(Attack());
     }
 
@@ -30,15 +28,14 @@ public class HomingControllerT : Skill
     {
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("Attack", false);
-        CmdSpawnSkill(player);
+        CmdSpawnFreezeSkill(player);
     }
-
     [Command]
-    void CmdSpawnSkill(GameObject player)
+    void CmdSpawnFreezeSkill(GameObject player)
     {
         GameObject skillSpwanPosition = player.transform.FindChild("SkillSpawn").gameObject;
-        GameObject Homing = (GameObject)Instantiate(homingPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
-        Homing.GetComponent<HomingSkill>().idOwner = player.GetComponent<PlayerMageController>().playerId;
-        NetworkServer.SpawnWithClientAuthority(Homing, connectionToClient);
+        GameObject freeze = (GameObject)Instantiate(freezePrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
+        NetworkServer.Spawn(freeze);
+        Destroy(freeze, 10f);
     }
 }
