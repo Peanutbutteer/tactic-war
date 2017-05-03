@@ -49,8 +49,30 @@ public class BlinkController : Skill
         audioSource.PlayOneShot(audioBlink, volume);
         
         anim.SetBool("Blink", true);
+        if (skillPoint.transform.position.x >= 238)
+        {
+            Debug.Log("1");
+            skillPoint.transform.position = new Vector3(235, skillPoint.transform.position.y, skillPoint.transform.position.z);
+        }
+        if (skillPoint.transform.position.x <= 50)
+        {
+            Debug.Log("2");
+            skillPoint.transform.position = new Vector3(48, skillPoint.transform.position.y, skillPoint.transform.position.z);
+        }
+        if (skillPoint.transform.position.z >= 236)
+        {
+            Debug.Log("3");
+            skillPoint.transform.position = new Vector3(skillPoint.transform.position.x, skillPoint.transform.position.y, 234);
+        }
+        if (skillPoint.transform.position.z <= 43)
+        {
+            Debug.Log("4");
+            skillPoint.transform.position = new Vector3(skillPoint.transform.position.x, skillPoint.transform.position.y, 41);
+        }
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("Blink", false);
+
+
 
         CmdSpawnEffectBlink(player);
         
