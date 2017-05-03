@@ -6,13 +6,17 @@ public class EndGamePanel : MonoBehaviour
 {
 	public Text winner;
 
-	public void UpdateWinnerText(int winnerNo)
+	public void UpdateWinnerText(bool hasWinner,int winnerNo,string winnerName)
 	{
-		string winnerTxt = "Blue Win";
-		if (winnerNo != 0)
+		string winnerTxt = "Draw";
+		if (hasWinner)
 		{
-			winner.color = new Color32(201, 41, 45, 255);
-			winnerTxt = "Red Win";
+			winnerTxt = winnerName + " Win";
+			if (winnerNo == 0) {
+				winner.color = new Color32 (108,166,200,255);
+			} else {
+				winner.color = new Color32 (201, 41, 45, 255);
+			}
 		}
 		winner.text = winnerTxt;
 	}

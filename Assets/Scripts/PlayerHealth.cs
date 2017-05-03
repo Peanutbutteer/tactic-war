@@ -46,7 +46,7 @@ public class PlayerHealth : NetworkBehaviour
 			if (player.score < 3) player.IncrementScore();
 			RpcRespawn();
             currentHealth = maxHealth;
-            GameManager.s_Singleton.UpdateHudScore();
+            GameManager.s_Singleton.UpdateHudScore(false);
 		}
 	}
 
