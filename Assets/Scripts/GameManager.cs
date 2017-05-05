@@ -23,7 +23,10 @@ public class GameManager : NetworkBehaviour
 				if (text != null)
 				{
 					text.text = name;
-					text.color = new Color32(108, 166, 200, 255);
+                    if (id == 0)
+                    {
+                        text.color = new Color32(108, 166, 200, 255);
+                    }
 				}
 			}
 		}

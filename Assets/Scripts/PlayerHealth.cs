@@ -44,9 +44,10 @@ public class PlayerHealth : NetworkBehaviour
 			int id = gameObject.GetComponent<PlayerMageController>().playerId;
             foreach(LobbyPlayer play in LobbyPlayerList._instance._players)
             {
-                if(play.playerId!=id)
+                if(play.playerId != id)
                 {
                     id = play.playerId;
+                    break;
                 }
             }
             LobbyPlayer player = LobbyPlayerList._instance._players[id];

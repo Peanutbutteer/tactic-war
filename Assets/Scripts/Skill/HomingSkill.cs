@@ -60,7 +60,7 @@ public class HomingSkill : NetworkBehaviour
         var playerHealth = hit.GetComponent<PlayerHealth>();
         if (playerHealth != null)
         {
-            playerHealth.TakeDamage(10);
+            playerHealth.TakeDamage(20);
         }
 
     }
