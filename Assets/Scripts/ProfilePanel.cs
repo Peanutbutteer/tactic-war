@@ -36,7 +36,6 @@ public class ProfilePanel : MonoBehaviour
 			foreach (SkillSlot slot in slots)
 			{
 				slot.skillImage = SkillsInfoLibrary.s_Instance.getSkill(DataManager.s_Singleton.slots[index]).buttonSourceImage;
-				slot.skillId = index;
 				slot.OnSlotClick = SlotClick;
 				index++;
 			}

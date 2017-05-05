@@ -42,11 +42,19 @@ public class PlayerHealth : NetworkBehaviour
 		if (currentHealth <= 0)
 		{
 			int id = gameObject.GetComponent<PlayerMageController>().playerId;
-			LobbyPlayer player = LobbyPlayerList._instance._players[id];
+            foreach(LobbyPlayer play in LobbyPlayerList._instance._players)
+            {
+                if(play.playerId != id)
+                {
+                    id = play.playerId;
+                    break;
+                }
+            }
+            LobbyPlayer player = LobbyPlayerList._instance._players[id];
 			if (player.score < 3) player.IncrementScore();
 			RpcRespawn();
             currentHealth = maxHealth;
-            GameManager.s_Singleton.UpdateHudScore();
+            GameManager.s_Singleton.UpdateHudScore(false);
 		}
 	}
 

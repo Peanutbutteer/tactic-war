@@ -11,7 +11,7 @@ public class NetworkLobbyHook : LobbyHook {
         PlayerMageController mage = gamePlayer.GetComponent<PlayerMageController>();
 
         mage.color = lobby.playerColor;
-        mage.playerName = lobby.name;
+		mage.playerName = lobby.playerName;
         mage.SetPlayerId(lobby.playerId);
     }
 }

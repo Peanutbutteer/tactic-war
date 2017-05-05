@@ -17,15 +17,16 @@ public class GameManager : NetworkBehaviour
 			if (item.GetComponent<NetworkIdentity>().hasAuthority)
 			{
 				int id = item.GetComponent<PlayerMageController>().playerId;
+				string name = item.GetComponent<PlayerMageController> ().playerName;
 				GameObject scoreHud = GameObject.FindGameObjectWithTag("Team");
 				Text text = scoreHud.GetComponent<Text>();
 				if (text != null)
 				{
-					if (id != 0)
-					{
-						text.text = "BLUE";
-						text.color = new Color32(108, 166, 200, 255);
-					}
+					text.text = name;
+                    if (id == 0)
+                    {
+                        text.color = new Color32(108, 166, 200, 255);
+                    }
 				}
 			}
 		}
@@ -53,17 +54,32 @@ public class GameManager : NetworkBehaviour
 		}
 	}
 
-	public void UpdateHudScore()
+	public void UpdateHudScore(bool isEndGame)
 	{
+		int max = 0;
+		int maxId = -1;
+		string playerName = "";
 		int[] score = new int[LobbyPlayerList._instance._players.Count];
 		for (int i = 0; i < score.Length; ++i)
 		{
 			LobbyPlayer localPlayer = LobbyPlayerList._instance._players[i] as LobbyPlayer;
 			score[i] = localPlayer.score;
-			if (score[i] == 3)
+			if (score [i] > max) {
+				maxId = i;
+				max = score [i];
+				playerName = localPlayer.playerName;
+			}
+			if (score[i] >= 3)
 			{
 				StartCoroutine(EndGame());
-				RpcShowHudWinner(i);
+				RpcShowHudWinner(true,i,localPlayer.playerName);
+			}
+		}
+		if (isEndGame) {
+			if (maxId != -1) {
+				RpcShowHudWinner (true, maxId, playerName);
+			} else {
+				RpcShowHudWinner (false, 0, "Draw");
 			}
 		}
 		RpcUpdateHudScore(score);
@@ -87,16 +103,16 @@ public class GameManager : NetworkBehaviour
 	public void CmdEndGame()
 	{
 		StartCoroutine(EndGame());
-		RpcShowHudWinner(0);
+		UpdateHudScore (true);
 	}
 
 	[ClientRpc]
-	void RpcShowHudWinner(int winnerNo)
+	void RpcShowHudWinner(bool hasWinner,int winnerNo,string winnerName)
 	{
 		EndGamePanel[] endGamePanel = Resources.FindObjectsOfTypeAll<EndGamePanel>();
 		if (endGamePanel[0] != null)
 		{
-			endGamePanel[0].UpdateWinnerText(winnerNo);
+			endGamePanel[0].UpdateWinnerText(hasWinner,winnerNo,winnerName);
 			endGamePanel[0].Show();
 		}
 	}
