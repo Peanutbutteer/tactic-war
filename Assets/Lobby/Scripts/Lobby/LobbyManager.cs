@@ -55,7 +55,9 @@ namespace Prototype.NetworkLobby
 
 		public event Action<NetworkConnection, int> clientError;
 
-		public event Action matchDropped;
+        public event Action everyOneLeftGame;
+
+        public event Action matchDropped;
 
 		public static bool s_IsServer
 		{
@@ -365,9 +367,10 @@ namespace Prototype.NetworkLobby
 					p.ToggleJoinButton(numPlayers + 1 >= minPlayers);
 				}
 			}
-		}
+        }
 
-		public override void OnLobbyServerDisconnect(NetworkConnection conn)
+
+        public override void OnLobbyServerDisconnect(NetworkConnection conn)
 		{
 			for (int i = 0; i < lobbySlots.Length; ++i)
 			{
@@ -448,8 +451,18 @@ namespace Prototype.NetworkLobby
 			base.OnLobbyClientDisconnect(conn);
 		}
 
+        public override void OnServerDisconnect(NetworkConnection conn)
+        {
+            base.OnServerDisconnect(conn);
+            
+            if (state == GameState.InGame && LobbyPlayerList._instance._players.Count <= minPlayers)
+            {
+                everyOneLeftGame();
+            }
+        }
 
-		public override void OnClientError(NetworkConnection conn, int errorCode)
+
+        public override void OnClientError(NetworkConnection conn, int errorCode)
 		{
 			base.OnClientError(conn, errorCode);
 

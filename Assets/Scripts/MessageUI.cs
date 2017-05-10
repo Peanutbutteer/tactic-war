@@ -9,6 +9,7 @@ namespace Prototype.NetworkLobby
 		private LobbyManager lobbyManager;
 		public SettingPanel settingsPanel;
 		public ErrorModal errorPanel;
+        public RectTransform blackPanel;
 
 		// Use this for initialization
 		void Start()
@@ -45,8 +46,9 @@ namespace Prototype.NetworkLobby
 			if (lobbyManager != null)
 			{
 				settingsPanel.close();
-				lobbyManager.DisconnectAndReturnToMenu();
-			}
+                blackPanel.gameObject.SetActive(true);
+                lobbyManager.DisconnectAndReturnToMenu();
+            }
 		}
 
 		private void ShowErrorPanel()
@@ -55,12 +57,19 @@ namespace Prototype.NetworkLobby
 			{
 				ErrorModal.s_Instance.SetupTimer(5f, null);
 				ErrorModal.s_Instance.Show();
-				LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
-				//LobbyManager.s_Singleton.ServerChangeScene(LobbyManager.s_Singleton.offlineScene);
-			}
+                //StartCoroutine(WaitforEndGame());
+                //LobbyManager.s_Singleton.ServerChangeScene(LobbyManager.s_Singleton.offlineScene);
+            }
 		}
 
-		private void OnDrop()
+        IEnumerator WaitforEndGame()
+        {
+            yield return new WaitForSeconds(5f);
+            LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
+            blackPanel.gameObject.SetActive(true);
+        }
+
+        private void OnDrop()
 		{
 			ShowErrorPanel();
 		}

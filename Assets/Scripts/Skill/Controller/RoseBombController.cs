@@ -54,7 +54,7 @@ public class RoseBombController : Skill
         skillPoint.transform.position.z);
 
         CmdSpawnRoseFire(player , positionSpawn);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.5f);
         CmdSpawnRoseBoom(player , positionSpawn);
         Vector3 position = skillPoint.transform.position;
         position.y = 0;
