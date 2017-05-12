@@ -14,6 +14,7 @@ public class BlockController : Skill
 
     public override void ButtonUp()
     {
+        base.ButtonUp();
         CmdSpawnBlock(player);
     }
 

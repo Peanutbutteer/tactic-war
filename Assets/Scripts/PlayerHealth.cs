@@ -11,7 +11,8 @@ public class PlayerHealth : NetworkBehaviour
 
 	[SyncVar(hook = "OnChangeHealth")]
 	public int currentHealth = maxHealth;
-    private int spawnIndex = 2;
+    [SerializeField]
+    int spawnIndex = 1;
 
     public RectTransform healthBar;
 
@@ -41,7 +42,8 @@ public class PlayerHealth : NetworkBehaviour
 
 		if (currentHealth <= 0)
 		{
-			int id = gameObject.GetComponent<PlayerMageController>().playerId;
+            anim.SetBool("Death", true);
+            int id = gameObject.GetComponent<PlayerMageController>().playerId;
             foreach(LobbyPlayer play in LobbyPlayerList._instance._players)
             {
                 if(play.playerId != id)
@@ -60,12 +62,12 @@ public class PlayerHealth : NetworkBehaviour
 
 	IEnumerator PlayerDeath()
 	{
-		anim.SetBool("Death", true);
-		yield return new WaitForSeconds(4f);
+		yield return new WaitForSeconds(3f);
 		anim.SetBool("Death", false);
-		CmdUpdateIndex();
-		spawnPoint = spawnPoints[spawnIndex].transform.position;
-		GetComponent<AudioSource>().PlayOneShot(spawnSound);
+        CmdUpdateIndex();
+        //spawnPoint = spawnPoints[Random.Range(0, 3)].transform.position;
+        spawnPoint = spawnPoints[spawnIndex].transform.position;
+        GetComponent<AudioSource>().PlayOneShot(spawnSound);
 		transform.position = spawnPoint;
     }
 
@@ -79,7 +81,7 @@ public class PlayerHealth : NetworkBehaviour
 			{
 				spawnIndex = 0;
 			}
-			RpcUpdateSpwan(spawnIndex);
+            RpcUpdateSpwan(spawnIndex);
 		}
 	}
 

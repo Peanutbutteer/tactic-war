@@ -57,10 +57,9 @@ namespace Prototype.NetworkLobby
 			{
 				ErrorModal.s_Instance.SetupTimer(5f, null);
 				ErrorModal.s_Instance.Show();
-                //StartCoroutine(WaitforEndGame());
-                //LobbyManager.s_Singleton.ServerChangeScene(LobbyManager.s_Singleton.offlineScene);
+                LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
             }
-		}
+        }
 
         IEnumerator WaitforEndGame()
         {

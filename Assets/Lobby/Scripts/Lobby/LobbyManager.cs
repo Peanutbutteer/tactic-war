@@ -454,7 +454,7 @@ namespace Prototype.NetworkLobby
         public override void OnServerDisconnect(NetworkConnection conn)
         {
             base.OnServerDisconnect(conn);
-            
+
             if (state == GameState.InGame && LobbyPlayerList._instance._players.Count <= minPlayers)
             {
                 everyOneLeftGame();
@@ -503,7 +503,6 @@ namespace Prototype.NetworkLobby
 			s_ReturnPage = returnPage;
 
 			m_SceneChangeMode = SceneChangeMode.Menu;
-			Debug.Log(m_SceneChangeMode);
 
 			if (s_IsServer && state == GameState.InGame)
 			{

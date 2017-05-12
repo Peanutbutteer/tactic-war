@@ -10,7 +10,7 @@ public class Freeze : NetworkBehaviour
     [Range(0f, 40f)]
     public float freezeVelocity = 0.1f;
     [Range(0f, 40f)]
-    public int damage = 10;
+    public int damage = 20;
 
     private AudioSource source;
     private Rigidbody freeze;

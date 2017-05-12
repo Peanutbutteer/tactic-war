@@ -42,8 +42,8 @@ public class GameManager : NetworkBehaviour
     IEnumerator WaitforEndGame()
     {
         yield return new WaitForSeconds(5f);
-        LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
         blackPanel.gameObject.SetActive(true);
+        LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
     }
 
     void Awake()

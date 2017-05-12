@@ -7,7 +7,7 @@ public class Laser : NetworkBehaviour
     [Range(0f, 40f)]
     public float laserVelocity = 0.1f;
     [Range(0f, 40f)]
-    public int damage = 10;
+    public int damage = 30;
     private Rigidbody laser;
     // Use this for initialization
     void Start()
