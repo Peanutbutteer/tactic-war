@@ -8,6 +8,8 @@ public class GameManager : NetworkBehaviour
 {
 	public static GameManager s_Singleton;
     public RectTransform blackPanel;
+    [SerializeField]
+    public int winScore = 3;
 
 	// Use this for initialization
 	void Start()
@@ -82,7 +84,7 @@ public class GameManager : NetworkBehaviour
 				max = score [i];
 				playerName = localPlayer.playerName;
 			}
-			if (score[i] >= 3)
+			if (score[i] >= winScore)
 			{
 				StartCoroutine(EndGame());
 				RpcShowHudWinner(true,i,localPlayer.playerName);

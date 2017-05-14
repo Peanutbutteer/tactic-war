@@ -12,7 +12,7 @@ public class PlayerHealth : NetworkBehaviour
 	[SyncVar(hook = "OnChangeHealth")]
 	public int currentHealth = maxHealth;
     [SerializeField]
-    int spawnIndex = 1;
+    public int spawnIndex = 1;
 
     public RectTransform healthBar;
 
@@ -42,7 +42,7 @@ public class PlayerHealth : NetworkBehaviour
 
 		if (currentHealth <= 0)
 		{
-            anim.SetBool("Death", true);
+            
             int id = gameObject.GetComponent<PlayerMageController>().playerId;
             foreach(LobbyPlayer play in LobbyPlayerList._instance._players)
             {
@@ -62,35 +62,16 @@ public class PlayerHealth : NetworkBehaviour
 
 	IEnumerator PlayerDeath()
 	{
+        // Client side
+        anim.SetBool("Death", true);
 		yield return new WaitForSeconds(3f);
 		anim.SetBool("Death", false);
-        CmdUpdateIndex();
-        //spawnPoint = spawnPoints[Random.Range(0, 3)].transform.position;
-        spawnPoint = spawnPoints[spawnIndex].transform.position;
+        spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
         GetComponent<AudioSource>().PlayOneShot(spawnSound);
 		transform.position = spawnPoint;
     }
 
-	[Command]
-	void CmdUpdateIndex()
-	{
-		if (spawnPoints != null && spawnPoints.Length > 0)
-		{
-			spawnIndex++;
-			if (spawnIndex >= spawnPoints.Length)
-			{
-				spawnIndex = 0;
-			}
-            RpcUpdateSpwan(spawnIndex);
-		}
-	}
-
-	void RpcUpdateSpwan(int index)
-	{
-		this.spawnIndex = index;
-	}
-
-	void OnChangeHealth(int health)
+    void OnChangeHealth(int health)
 	{
 		healthBar.sizeDelta = new Vector2(health, healthBar.sizeDelta.y);
 	}
