@@ -22,6 +22,7 @@ public class HomingSkill : NetworkBehaviour
         source.volume = volume;
         source.clip = soundHoming;
         source.Play();
+        Destroy(this, 10f);
     }
 
     // Update is called once per frame

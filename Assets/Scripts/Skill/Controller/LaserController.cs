@@ -33,7 +33,7 @@ public class LaserController : Skill
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("Attack", false);
         CmdSpawnLaserChargeSkill(player);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         CmdSpawnLaserSkill(player);
 
     }
@@ -45,7 +45,7 @@ public class LaserController : Skill
         chargeSpawnPosition = new Vector3(skillSpwanPosition.transform.position.x, skillSpwanPosition.transform.position.y, skillSpwanPosition.transform.position.z);
         chargeSpawnRotation = new Quaternion(skillSpwanPosition.transform.rotation.x, skillSpwanPosition.transform.rotation.y, skillSpwanPosition.transform.rotation.z, skillSpwanPosition.transform.rotation.w);
         NetworkServer.Spawn(laserCharge);
-        Destroy(laserCharge, 1f);
+        Destroy(laserCharge, 0.5f);
     }
     [Command]
     void CmdSpawnLaserSkill(GameObject player)
