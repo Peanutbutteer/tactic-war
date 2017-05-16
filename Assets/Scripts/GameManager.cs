@@ -34,18 +34,14 @@ public class GameManager : NetworkBehaviour
 			}
 		}
         LobbyManager.s_Singleton.everyOneLeftGame += () => {
-            ErrorModal.s_Instance.SetupTimer(5f, null);
+            ErrorModal.s_Instance.SetupTimer(5f, () =>
+            {
+                blackPanel.gameObject.SetActive(true);
+                LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
+            });
             ErrorModal.s_Instance.Show();
-            StartCoroutine(WaitforEndGame());
         };
 
-
-    }
-    IEnumerator WaitforEndGame()
-    {
-        yield return new WaitForSeconds(5f);
-        blackPanel.gameObject.SetActive(true);
-        LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
     }
 
     void Awake()

@@ -140,9 +140,10 @@ namespace Prototype.NetworkLobby
 			{
 				HideAllPanel();
 			}
-		}
 
-		protected virtual void Awake()
+        }
+
+        protected virtual void Awake()
 		{
 			if (s_Singleton != null)
 			{
@@ -411,13 +412,6 @@ namespace Prototype.NetworkLobby
 
 			if (allready)
 			{
-				for (int i = 0; i < lobbySlots.Length; ++i)
-				{
-					if (lobbySlots[i] != null)
-					{
-						(lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown();
-					}
-				}
 				ServerChangeScene(playScene);
 				m_SceneChangeMode = SceneChangeMode.Game;
 				state = GameState.InGame;
@@ -472,7 +466,7 @@ namespace Prototype.NetworkLobby
 			}
 		}
 
-		public override void OnDropConnection(bool success, string extendedInfo)
+        public override void OnDropConnection(bool success, string extendedInfo)
 		{
 			base.OnDropConnection(success, extendedInfo);
 
@@ -480,7 +474,7 @@ namespace Prototype.NetworkLobby
 			{
 				matchDropped();
 			}
-		}
+        }
 
 		public override void OnServerError(NetworkConnection conn, int errorCode)
 		{
@@ -490,7 +484,7 @@ namespace Prototype.NetworkLobby
 			{
 				serverError(conn, errorCode);
 			}
-		}
+        }
 
 		public void DisconnectAndReturnToMenu()
 		{
@@ -504,18 +498,7 @@ namespace Prototype.NetworkLobby
 
 			m_SceneChangeMode = SceneChangeMode.Menu;
 
-			if (s_IsServer && state == GameState.InGame)
-			{
-				for (int i = 0; i < lobbySlots.Length; ++i)
-				{
-					if (lobbySlots[i] != null)
-					{
-						(lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown();
-					}
-				}
-			}
-
-			else
+			if (!(s_IsServer && state == GameState.InGame))
 			{
 				LoadingModal loading = LoadingModal.s_Instance;
 

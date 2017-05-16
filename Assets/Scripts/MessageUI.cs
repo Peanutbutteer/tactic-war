@@ -61,13 +61,6 @@ namespace Prototype.NetworkLobby
             }
         }
 
-        IEnumerator WaitforEndGame()
-        {
-            yield return new WaitForSeconds(5f);
-            LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
-            blackPanel.gameObject.SetActive(true);
-        }
-
         private void OnDrop()
 		{
 			ShowErrorPanel();
