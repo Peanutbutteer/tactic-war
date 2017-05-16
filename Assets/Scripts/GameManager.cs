@@ -7,6 +7,9 @@ using UnityEngine.UI;
 public class GameManager : NetworkBehaviour
 {
 	public static GameManager s_Singleton;
+    public RectTransform blackPanel;
+    [SerializeField]
+    public int winScore = 3;
 
 	// Use this for initialization
 	void Start()
@@ -30,10 +33,18 @@ public class GameManager : NetworkBehaviour
 				}
 			}
 		}
+        LobbyManager.s_Singleton.everyOneLeftGame += () => {
+            ErrorModal.s_Instance.SetupTimer(5f, () =>
+            {
+                blackPanel.gameObject.SetActive(true);
+                LobbyManager.s_Singleton.DisconnectAndReturnToMenu();
+            });
+            ErrorModal.s_Instance.Show();
+        };
 
-	}
+    }
 
-	void Awake()
+    void Awake()
 	{
 		if (s_Singleton == null)
 		{
@@ -69,7 +80,7 @@ public class GameManager : NetworkBehaviour
 				max = score [i];
 				playerName = localPlayer.playerName;
 			}
-			if (score[i] >= 3)
+			if (score[i] >= winScore)
 			{
 				StartCoroutine(EndGame());
 				RpcShowHudWinner(true,i,localPlayer.playerName);
@@ -120,7 +131,8 @@ public class GameManager : NetworkBehaviour
 	IEnumerator EndGame()
 	{
 		yield return new WaitForSeconds(10f);
-		LobbyManager.s_Singleton.ServerChangeScene(LobbyManager.s_Singleton.offlineScene);
-	}
+        blackPanel.gameObject.SetActive(true);
+        LobbyManager.s_Singleton.ServerChangeScene(LobbyManager.s_Singleton.offlineScene);
+    }
 
 }

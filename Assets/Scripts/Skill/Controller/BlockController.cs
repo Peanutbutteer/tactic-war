@@ -14,6 +14,7 @@ public class BlockController : Skill
 
     public override void ButtonUp()
     {
+        base.ButtonUp();
         CmdSpawnBlock(player);
     }
 
@@ -26,7 +27,7 @@ public class BlockController : Skill
 		GameObject block = Instantiate(blockPrefab, blockPrefab.transform.position, blockPrefab.transform.rotation);
 		block.transform.parent = player.transform;
 		NetworkServer.Spawn(block);
-        Destroy(block, 1.0f);
+        Destroy(block, 2.0f);
         RpcSyncBlock(block.transform.position,block.transform.rotation,block,player);
 	}
     [ClientRpc]

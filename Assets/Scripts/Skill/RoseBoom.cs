@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class RoseBoom : NetworkBehaviour
 {
     [Range(0f, 50f)]
-    public int damage = 20;
+    public int damage = 40;
 
     // Use this for initialization
     void Start () {

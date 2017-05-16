@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using Prototype.NetworkLobby;
 using UnityEngine.Networking;
 public class GameTimer : NetworkBehaviour
 {
@@ -10,13 +11,20 @@ public class GameTimer : NetworkBehaviour
 	[SerializeField]
 	private float timer;
 	public Text timeText;
+    public GameObject loadingPanel;
 	private bool isFinishing = false;
 
 	// Use this for initialization
 	void Start()
 	{
-		timer = time * 60f;
-	}
+        ErrorModal.s_Instance.SetupTimer(3f, ()=>
+        {
+            timer = time * 60f;
+            ErrorModal.s_Instance.CloseModal();
+            loadingPanel.gameObject.SetActive(false);
+        });
+        ErrorModal.s_Instance.Show("Waiting");
+    }
 
 	// Update is called once per frame
 	void LateUpdate()

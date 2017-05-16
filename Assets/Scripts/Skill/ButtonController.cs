@@ -4,9 +4,9 @@ using UnityEngine;
 using CnControls;
 using UnityEngine.UI;
 using UnityEngine.Networking;
-public class ButtonController : NetworkBehaviour
+public class ButtonController : MonoBehaviour
 {
-	public SkillBehavior skill;
+    public SkillBehavior skill;
 	public string buttonName;
 	public int indexSelectedSkill;
 	public bool isPressButton = false;
@@ -14,7 +14,7 @@ public class ButtonController : NetworkBehaviour
 	public float scale = 1;
 	public GameObject virtualJoyStickPrefab;
 
-	private string simpleButtonName;
+    private string simpleButtonName;
 	private string verticalButtonName;
 	private string horizontalButtonName;
 
@@ -22,7 +22,7 @@ public class ButtonController : NetworkBehaviour
 	private GameObject cooldownPrefab;
 	private GameObject canvas;
 	private Sprite buttonImage;
-	void Start()
+    void Start()
 	{
 		canvas = GameObject.FindGameObjectWithTag("Canvas");
 		skill = SkillsLibrary.s_Instance.getSkill(indexSelectedSkill);
@@ -38,19 +38,19 @@ public class ButtonController : NetworkBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (!isLocalPlayer||skill.isCooldown())
+		if (skill.isCooldown())
 		{
 			return;
 		}
 		if (CnInputManager.GetButtonDown(simpleButtonName))
 		{
-			skill.ButtonDown();
+                skill.ButtonDown();
 		}
-		if (CnInputManager.GetButtonUp(simpleButtonName) && !cancelSkill)
+		if (CnInputManager.GetButtonUp(simpleButtonName) && !cancelSkill && GetComponent<Animator>().GetBool("Death") != true)
 		{
-			skill.ButtonUp();
+                skill.ButtonUp();
 		}
-        if (CnInputManager.GetButtonUp(simpleButtonName) && cancelSkill)
+        if (CnInputManager.GetButtonUp(simpleButtonName) && cancelSkill || GetComponent<Animator>().GetBool("Death") == true)
         {
             skill.ButtonCancel();
         }

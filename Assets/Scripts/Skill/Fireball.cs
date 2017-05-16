@@ -9,7 +9,7 @@ public class Fireball : NetworkBehaviour {
     [Range(0f, 1f)]
     public float volume = 0.5f;
     [Range(0f, 40f)]
-    public int damage = 10;
+    public int damage = 15;
 
     private AudioSource source;
     // Use this for initialization

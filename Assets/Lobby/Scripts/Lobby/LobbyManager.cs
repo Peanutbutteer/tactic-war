@@ -55,7 +55,9 @@ namespace Prototype.NetworkLobby
 
 		public event Action<NetworkConnection, int> clientError;
 
-		public event Action matchDropped;
+        public event Action everyOneLeftGame;
+
+        public event Action matchDropped;
 
 		public static bool s_IsServer
 		{
@@ -138,9 +140,10 @@ namespace Prototype.NetworkLobby
 			{
 				HideAllPanel();
 			}
-		}
 
-		protected virtual void Awake()
+        }
+
+        protected virtual void Awake()
 		{
 			if (s_Singleton != null)
 			{
@@ -365,9 +368,10 @@ namespace Prototype.NetworkLobby
 					p.ToggleJoinButton(numPlayers + 1 >= minPlayers);
 				}
 			}
-		}
+        }
 
-		public override void OnLobbyServerDisconnect(NetworkConnection conn)
+
+        public override void OnLobbyServerDisconnect(NetworkConnection conn)
 		{
 			for (int i = 0; i < lobbySlots.Length; ++i)
 			{
@@ -408,13 +412,6 @@ namespace Prototype.NetworkLobby
 
 			if (allready)
 			{
-				for (int i = 0; i < lobbySlots.Length; ++i)
-				{
-					if (lobbySlots[i] != null)
-					{
-						(lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown();
-					}
-				}
 				ServerChangeScene(playScene);
 				m_SceneChangeMode = SceneChangeMode.Game;
 				state = GameState.InGame;
@@ -448,8 +445,18 @@ namespace Prototype.NetworkLobby
 			base.OnLobbyClientDisconnect(conn);
 		}
 
+        public override void OnServerDisconnect(NetworkConnection conn)
+        {
+            base.OnServerDisconnect(conn);
 
-		public override void OnClientError(NetworkConnection conn, int errorCode)
+            if (state == GameState.InGame && LobbyPlayerList._instance._players.Count <= minPlayers)
+            {
+                everyOneLeftGame();
+            }
+        }
+
+
+        public override void OnClientError(NetworkConnection conn, int errorCode)
 		{
 			base.OnClientError(conn, errorCode);
 
@@ -459,7 +466,7 @@ namespace Prototype.NetworkLobby
 			}
 		}
 
-		public override void OnDropConnection(bool success, string extendedInfo)
+        public override void OnDropConnection(bool success, string extendedInfo)
 		{
 			base.OnDropConnection(success, extendedInfo);
 
@@ -467,7 +474,7 @@ namespace Prototype.NetworkLobby
 			{
 				matchDropped();
 			}
-		}
+        }
 
 		public override void OnServerError(NetworkConnection conn, int errorCode)
 		{
@@ -477,7 +484,7 @@ namespace Prototype.NetworkLobby
 			{
 				serverError(conn, errorCode);
 			}
-		}
+        }
 
 		public void DisconnectAndReturnToMenu()
 		{
@@ -490,20 +497,8 @@ namespace Prototype.NetworkLobby
 			s_ReturnPage = returnPage;
 
 			m_SceneChangeMode = SceneChangeMode.Menu;
-			Debug.Log(m_SceneChangeMode);
 
-			if (s_IsServer && state == GameState.InGame)
-			{
-				for (int i = 0; i < lobbySlots.Length; ++i)
-				{
-					if (lobbySlots[i] != null)
-					{
-						(lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown();
-					}
-				}
-			}
-
-			else
+			if (!(s_IsServer && state == GameState.InGame))
 			{
 				LoadingModal loading = LoadingModal.s_Instance;
 

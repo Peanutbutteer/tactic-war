@@ -50,6 +50,7 @@ public class PlayerMageController : NetworkBehaviour
 		index = 0;
 		foreach (ButtonController button in buttons)
 		{
+            if (index == 4) return;
 			button.indexSelectedSkill = skillSlot[index];
 			index++;
 		}

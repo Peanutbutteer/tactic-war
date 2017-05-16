@@ -8,20 +8,20 @@ public class SetAuthorityToSkill : NetworkBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		skill = SkillsLibrary.s_Instance.getSkills();
-		if (skill != null)
-		{
-			for (int index = 0; index < skill.Length; index++)
-			{
-				skill[index].OnStartPlayer();
-				CmdSetAuthority(skill[index].GetNetworkIdentity());
-			}
-		}
-		CmdSetAuthority(GameManager.s_Singleton.GetComponent<NetworkIdentity>());
-	}
+        //if (!isLocalPlayer) return;
+        skill = SkillsLibrary.s_Instance.getSkills();
+        if (skill != null)
+        {
+            for (int index = 0; index < skill.Length; index++)
+            {
+                skill[index].OnStartPlayer();
+                CmdSetAuthority(skill[index].GetNetworkIdentity());
+            }
+        }
+        CmdSetAuthority(GameManager.s_Singleton.GetComponent<NetworkIdentity>());
+    }
 
-
-	[Command]
+    [Command]
 	void CmdSetAuthority(NetworkIdentity grabID)
 	{
 		grabID.AssignClientAuthority(connectionToClient);

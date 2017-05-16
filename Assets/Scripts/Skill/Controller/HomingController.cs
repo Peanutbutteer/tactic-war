@@ -38,5 +38,6 @@ public class HomingController : Skill
         GameObject Homing = (GameObject)Instantiate(homingPrefab, skillSpwanPosition.transform.position, skillSpwanPosition.transform.rotation);
         Homing.GetComponent<HomingSkill>().idOwner = player.GetComponent<PlayerMageController>().playerId;
         NetworkServer.SpawnWithClientAuthority(Homing, connectionToClient);
+        Destroy(Homing, 10f);
     }
 }

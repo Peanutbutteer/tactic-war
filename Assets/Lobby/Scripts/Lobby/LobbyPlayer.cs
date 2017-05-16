@@ -122,7 +122,7 @@ namespace Prototype.NetworkLobby
 
 			ChangeReadyButtonColor(NotReadyColor);
 
-			readyButton.transform.GetChild(0).GetComponent<Text>().text = "...";
+			readyButton.transform.GetChild(0).GetComponent<Text>().text = "WAITING";
 			readyButton.interactable = false;
 
 			OnClientReady(false);
@@ -195,7 +195,7 @@ namespace Prototype.NetworkLobby
 				ChangeReadyButtonColor(isLocalPlayer ? JoinColor : NotReadyColor);
 
 				Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
-				textComponent.text = isLocalPlayer ? "JOIN" : "...";
+				textComponent.text = isLocalPlayer ? "JOIN" : "WAITING";
 				textComponent.color = Color.white;
 				readyButton.interactable = isLocalPlayer;
 				colorButton.interactable = isLocalPlayer;
@@ -262,19 +262,6 @@ namespace Prototype.NetworkLobby
 		{
 			readyButton.gameObject.SetActive(enabled);
 			waitingPlayerButton.gameObject.SetActive(!enabled);
-		}
-
-		[ClientRpc]
-		public void RpcUpdateCountdown()
-		{
-			//LoadingModal loading = LoadingModal.s_Instance;
-
-			//if (loading != null)
-			//{
-			//	//loading.FadeIn();
-			//	loading.FadeOut();
-			//}
-
 		}
 
 		[ClientRpc]
