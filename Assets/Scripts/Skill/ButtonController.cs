@@ -42,7 +42,7 @@ public class ButtonController : MonoBehaviour
 		{
 			return;
 		}
-		if (CnInputManager.GetButtonDown(simpleButtonName))
+		if (CnInputManager.GetButtonDown(simpleButtonName) && GetComponent<Animator>().GetBool("Death") != true)
 		{
                 skill.ButtonDown();
 		}

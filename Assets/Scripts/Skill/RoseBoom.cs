@@ -7,6 +7,7 @@ public class RoseBoom : NetworkBehaviour
 {
     [Range(0f, 50f)]
     public int damage = 40;
+    public bool onceAtk = false;
 
     // Use this for initialization
     void Start () {
@@ -31,8 +32,9 @@ public class RoseBoom : NetworkBehaviour
             return;
         var hit = collision.gameObject;
         var playerHealth = hit.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
+        if (playerHealth != null && !onceAtk)
         {
+            onceAtk = true;
             playerHealth.TakeDamage(damage);
         }
 
